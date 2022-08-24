@@ -88,8 +88,8 @@ task('take-dump').setAction(async (args, hre) => {
       decimals: 18,
     },
     TssRewardContract: {
-      _owner: hre.deployConfig.bvmTssRewardContractOwner,
-      _deadAddress: "0xdeaddeaddeaddeaddeaddeaddeaddeaddeaddead",
+      deadAddress: "0xdeaddeaddeaddeaddeaddeaddeaddeaddeaddead",
+      owner: hre.deployConfig.bvmTssRewardContractOwner,
     },
   }
 
@@ -114,7 +114,9 @@ task('take-dump').setAction(async (args, hre) => {
 
     // Compute and set the required storage slots for each contract that needs it.
     if (predeployName in variables) {
+      console.log("predeployName->",predeployName)
       const storageLayout = await getStorageLayout(predeployName)
+      console.log("variables[predeployName]->",variables[predeployName])
       const slots = computeStorageSlots(storageLayout, variables[predeployName])
       for (const slot of slots) {
         dump[predeployAddress].storage[slot.key] = slot.val
