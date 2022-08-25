@@ -412,7 +412,7 @@ func (s *StateDB) SubBalance(addr common.Address, amount *big.Int) {
 
 func (s *StateDB) SetBalance(addr common.Address, amount *big.Int) {
 	if rcfg.UsingBVM {
-		// Mutate the storage slot inside of bvm_ETH to change balances.
+		// Mutate the storage slot inside bvm_ETH to change balances.
 		key := GetbvmBalanceKey(addr)
 		s.SetState(dump.BvmEthAddress, key, common.BigToHash(amount))
 	} else {
