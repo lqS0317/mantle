@@ -1,0 +1,74 @@
+Importing private key
+INFO [08-25|14:18:55.631] Maximum peer count                       ETH=50 LES=0 total=50
+INFO [08-25|14:18:55.632] Smartcard socket not found, disabling    err="stat /run/pcscd/pcscd.comm: no such file or directory"
+Fatal: Could not create the account: account already exists
+Fatal: Could not create the account: account already exists
+Initializing Geth node
+INFO [08-25|14:18:55.666] Maximum peer count                       ETH=50 LES=0 total=50
+INFO [08-25|14:18:55.666] Smartcard socket not found, disabling    err="stat /run/pcscd/pcscd.comm: no such file or directory"
+DEBUG[08-25|14:18:55.666] FS scan times                            list=47µs set=2.958µs diff=1.959µs
+TRACE[08-25|14:18:55.666] Handled keystore changes                 time=35.25µs
+INFO [08-25|14:18:55.666] Allocated cache and file handles         database=/root/.ethereum/geth/chaindata cache=16.00MiB handles=16
+INFO [08-25|14:18:55.679] Persisted trie from memory database      nodes=57 size=35.29KiB time=622.583µs gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=-1140.00B
+INFO [08-25|14:18:55.679] Successfully wrote genesis state         database=chaindata                      hash=2c3738…8b66cd
+INFO [08-25|14:18:55.679] Allocated cache and file handles         database=/root/.ethereum/geth/lightchaindata cache=16.00MiB handles=16
+INFO [08-25|14:18:55.694] Persisted trie from memory database      nodes=57 size=35.29KiB time=106.209µs gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=-1140.00B
+INFO [08-25|14:18:55.698] Successfully wrote genesis state         database=lightchaindata                      hash=2c3738…8b66cd
+Starting Geth node
+DEBUG[08-25|14:18:55.730] Sanitizing Go's GC trigger               percent=100
+INFO [08-25|14:18:55.731] Maximum peer count                       ETH=50 LES=0 total=50
+INFO [08-25|14:18:55.731] Smartcard socket not found, disabling    err="stat /run/pcscd/pcscd.comm: no such file or directory"
+DEBUG[08-25|14:18:55.731] FS scan times                            list=34.792µs set=2.375µs diff=1.125µs
+TRACE[08-25|14:18:55.731] Handled keystore changes                 time=38.917µs
+DEBUG[08-25|14:18:55.731] FS scan times                            list=13.416µs set=1.334µs diff=666ns
+INFO [08-25|14:18:55.732] Starting peer-to-peer node               instance=Geth/v1.9.10-stable/linux-arm64/go1.18
+INFO [08-25|14:18:55.733] Allocated trie memory caches             clean=512.00MiB dirty=0.00B
+INFO [08-25|14:18:55.733] Allocated cache and file handles         database=/root/.ethereum/geth/chaindata cache=512.00MiB handles=524288
+DEBUG[08-25|14:18:55.743] Chain freezer table opened               database=/root/.ethereum/geth/chaindata/ancient table=receipts items=0 size=0.00B
+DEBUG[08-25|14:18:55.743] Chain freezer table opened               database=/root/.ethereum/geth/chaindata/ancient table=diffs    items=0 size=0.00B
+DEBUG[08-25|14:18:55.743] Chain freezer table opened               database=/root/.ethereum/geth/chaindata/ancient table=headers  items=0 size=0.00B
+DEBUG[08-25|14:18:55.744] Chain freezer table opened               database=/root/.ethereum/geth/chaindata/ancient table=hashes   items=0 size=0.00B
+DEBUG[08-25|14:18:55.744] Chain freezer table opened               database=/root/.ethereum/geth/chaindata/ancient table=bodies   items=0 size=0.00B
+INFO [08-25|14:18:55.744] Opened ancient database                  database=/root/.ethereum/geth/chaindata/ancient
+INFO [08-25|14:18:55.744] Initialised chain configuration          config="{ChainID: 17 Homestead: 0 DAO: <nil> DAOSupport: false EIP150: 0 EIP155: 0 EIP158: 0 Byzantium: 0 Constantinople: 0 Petersburg: 0 Istanbul: 0, Muir Glacier: 0, Berlin: 0, Engine: clique}"
+INFO [08-25|14:18:55.744] Initialising Ethereum protocol           versions="[64 63]" network=17 dbversion=7
+INFO [08-25|14:18:55.745] Loaded most recent local header          number=0 hash=2c3738…8b66cd td=1 age=53y4mo4w
+INFO [08-25|14:18:55.745] Loaded most recent local full block      number=0 hash=2c3738…8b66cd td=1 age=53y4mo4w
+INFO [08-25|14:18:55.745] Loaded most recent local fast block      number=0 hash=2c3738…8b66cd td=1 age=53y4mo4w
+DEBUG[08-25|14:18:55.745] Reinjecting stale transactions           count=0
+INFO [08-25|14:18:55.745] Loaded local transaction journal         transactions=0 dropped=0
+INFO [08-25|14:18:55.746] Regenerated local transaction journal    transactions=0 accounts=0
+INFO [08-25|14:18:55.746] Running in sequencer mode                sync-backend=l1
+INFO [08-25|14:18:55.746] Fees                                     threshold-up=1.1 threshold-down=0.9
+INFO [08-25|14:18:55.746] Enforce Fees                             set=true
+INFO [08-25|14:18:55.746] Configured rollup client                 url=http://dtl:7878 chain-id=17 ctc-deploy-height=8
+INFO [08-25|14:18:55.808] Connected to upstream service 
+INFO [08-25|14:18:55.834] Found latest index                       index=0
+INFO [08-25|14:18:55.834] Block not found, resetting index         new=<nil> old=0
+ERROR[08-25|14:18:55.834] Unexpected number of transactions in block count=0
+panic: Cannot recover BVM Context
+
+goroutine 1 [running]:
+github.com/bitdao-io/bitnetwork/l2geth/rollup.(*SyncService).initializeLatestL1(0x40002d9a00, 0x4000110360)
+        /app/l2geth/rollup/sync_service.go:320 +0xf18
+github.com/bitdao-io/bitnetwork/l2geth/rollup.NewSyncService({0x11e8b40?, 0x400003a130?}, {0x1f018, 0x0, 0x1, 0xe4e1c0, {0x4000036043, 0xf}, {0x0, 0x0, ...}, ...}, ...)
+        /app/l2geth/rollup/sync_service.go:196 +0xa6c
+github.com/bitdao-io/bitnetwork/l2geth/eth.New(0x4000110500, 0x4000134c00)
+        /app/l2geth/eth/backend.go:209 +0xe30
+github.com/bitdao-io/bitnetwork/l2geth/cmd/utils.RegisterEthService.func2(0x40002f2c30?)
+        /app/l2geth/cmd/utils/flags.go:1719 +0x28
+github.com/bitdao-io/bitnetwork/l2geth/node.(*Node).Start(0x4000568500)
+        /app/l2geth/node/node.go:206 +0x528
+github.com/bitdao-io/bitnetwork/l2geth/cmd/utils.StartNode(0x4000568500)
+        /app/l2geth/cmd/utils/cmd.go:67 +0x24
+main.startNode(0x40002ca2c0?, 0x4000568500)
+        /app/l2geth/cmd/geth/main.go:340 +0x50
+main.geth(0x40002ca2c0)
+        /app/l2geth/cmd/geth/main.go:328 +0xd0
+gopkg.in/urfave/cli%2ev1.HandleAction({0xe16d40?, 0x1087e80?}, 0x40002b2400?)
+        /go/pkg/mod/gopkg.in/urfave/cli.v1@v1.20.0/app.go:490 +0x70
+gopkg.in/urfave/cli%2ev1.(*App).Run(0x40002d81a0, {0x40000320a0, 0xa, 0xa})
+        /go/pkg/mod/gopkg.in/urfave/cli.v1@v1.20.0/app.go:264 +0x544
+main.main()
+        /app/l2geth/cmd/geth/main.go:268 +0x50
+

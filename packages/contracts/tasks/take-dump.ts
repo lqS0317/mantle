@@ -87,6 +87,10 @@ task('take-dump').setAction(async (args, hre) => {
       symbol: 'WETH',
       decimals: 18,
     },
+    TssRewardContract: {
+      deadAddress: '0xD6f15EAC1Cb3B4131Ab4899a52E711e19DEeA73f',
+      owner: hre.deployConfig.bvmTssRewardContractOwner,
+    },
   }
 
   const dump = {}
