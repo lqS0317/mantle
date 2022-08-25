@@ -244,13 +244,8 @@ func (s *StateDB) GetBalance(addr common.Address) *big.Int {
 	if rcfg.UsingBVM {
 		// Get balance from the bvm_ETH contract.
 		// NOTE: We may remove this feature in a future release.
-<<<<<<< HEAD
 		key := GetbvmBalanceKey(addr)
 		bal := s.GetState(dump.BvmEthAddress, key)
-=======
-		key := GetBVMBalanceKey(addr)
-		bal := s.GetState(dump.BvmBitAddress, key)
->>>>>>> 4fd98f7 (rename GetBalanceKey)
 		return bal.Big()
 	} else {
 		stateObject := s.getStateObject(addr)
