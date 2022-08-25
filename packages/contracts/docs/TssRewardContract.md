@@ -104,7 +104,7 @@ function ledger(uint256) external view returns (uint256)
 ### owner
 
 ```solidity
-function owner() external view returns (address payable)
+function owner() external view returns (address)
 ```
 
 
@@ -116,7 +116,7 @@ function owner() external view returns (address payable)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address payable | undefined
+| _0 | address | undefined
 
 ### queryReward
 

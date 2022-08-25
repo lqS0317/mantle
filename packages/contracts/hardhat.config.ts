@@ -16,6 +16,7 @@ import 'hardhat-output-validator'
 
 // Hardhat tasks
 import './tasks'
+import './tasks/TssReward-verification'
 
 // Load environment variables from .env
 dotenv.config()

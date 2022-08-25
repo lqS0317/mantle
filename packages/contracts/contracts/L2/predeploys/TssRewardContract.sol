@@ -19,13 +19,13 @@ contract TssRewardContract is ITssRewardContract {
 
     mapping(uint256 => uint256) public ledger;
     address public deadAddress;
-    address payable public owner;
+    address public owner;
     uint256 public bestBlockID;
     uint256 public dust;
     uint256 public totalAmount;
 
     // set call address
-    constructor(address _deadAddress, address payable _owner) {
+    constructor(address _deadAddress, address  _owner) {
         deadAddress = _deadAddress;
         owner = _owner;
     }
@@ -131,14 +131,14 @@ contract TssRewardContract is ITssRewardContract {
         totalAmount = totalAmount.sub(dust);
         dust = 0;
         if (amount > 0) {
-            owner.transfer(dust);
+            payable(owner).transfer(dust);
         }
     }
 
     function withdraw() external onlyOwner checkBalance {
         totalAmount = 0;
         if (address(this).balance > 0) {
-            owner.transfer(address(this).balance);
+            payable(owner).transfer(address(this).balance);
         }
     }
 }
