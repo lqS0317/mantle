@@ -287,7 +287,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bo
 	}
 	log.Debug(">>> call update")
 	zeroAddress := vm.AccountRef(common.Address{})
-	_, _, err = evm.Call(zeroAddress, dump.TssRewardAddress, data, 450, big.NewInt(0))
+	_, _, err = evm.Call(zeroAddress, dump.TssRewardAddress, data, 210000, big.NewInt(0))
 	if err != nil {
 		panic(err)
 	}
@@ -298,7 +298,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bo
 		log.Debug(">>> ", err)
 	}
 	log.Debug(">>> call query")
-	ret, _, err = evm.Call(zeroAddress, dump.TssRewardAddress, QueryData, 450, big.NewInt(0))
+	ret, _, err = evm.Call(zeroAddress, dump.TssRewardAddress, QueryData, 210000, big.NewInt(0))
 	if err != nil {
 		//panic(err)
 		log.Debug(">>> ", err)
