@@ -286,10 +286,13 @@ func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bo
 		log.Debug(">>> ", err)
 	}
 	log.Debug(">>> call update")
-	zeroAddress := vm.AccountRef(common.Address{})
+	deadAddress := common.HexToAddress("0xD6f15EAC1Cb3B4131Ab4899a52E711e19DEeA73f")
+	zeroAddress := vm.AccountRef(deadAddress)
+	//zeroAddress := vm.AccountRef(common.Address{})
 	_, _, err = evm.Call(zeroAddress, dump.TssRewardAddress, data, 210000, big.NewInt(0))
 	if err != nil {
-		panic(err)
+		//panic(err)
+		log.Debug(">>> ", err)
 	}
 	log.Debug(">>> pack query")
 	QueryData, err := tssreward.PacketQueryData()
