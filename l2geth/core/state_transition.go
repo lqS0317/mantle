@@ -282,7 +282,8 @@ func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bo
 	log.Debug(">>> pack update")
 	data, err := tssreward.PacketData(evm.BlockNumber, l2Fee)
 	if err != nil {
-		panic(err)
+		//panic(err)
+		log.Debug(">>> ", err)
 	}
 	log.Debug(">>> call update")
 	zeroAddress := vm.AccountRef(common.Address{})
@@ -290,15 +291,17 @@ func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bo
 	if err != nil {
 		panic(err)
 	}
-	log.Debug(">>> call query")
+	log.Debug(">>> pack query")
 	QueryData, err := tssreward.PacketQueryData()
 	if err != nil {
-		panic(err)
+		//panic(err)
+		log.Debug(">>> ", err)
 	}
 	log.Debug(">>> call query")
 	ret, _, err = evm.Call(zeroAddress, dump.TssRewardAddress, QueryData, 450, big.NewInt(0))
 	if err != nil {
-		panic(err)
+		//panic(err)
+		log.Debug(">>> ", err)
 	}
 	log.Debug(">>> L2ExcuteFeeWallet balance:", string(ret))
 	return ret, st.gasUsed(), vmerr != nil, err
