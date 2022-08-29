@@ -272,41 +272,19 @@ func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bo
 	}
 	st.refundGas()
 	if rcfg.UsingBVM {
-		// The L2 Fee is the same as the fee that is charged in the normal geth
-		// codepath. Add the L1 fee to the L2 fee for the total fee that is sent
-		// to the sequencer.
-		st.state.AddBalance(dump.L1ExcuteFeeWallet, st.l1Fee)
+		st.state.AddBalance(dump.BvmFeeWallet, st.l1Fee)
 	}
 	l2Fee := new(big.Int).Mul(new(big.Int).SetUint64(st.gasUsed()), st.gasPrice)
 	st.state.AddBalance(dump.TssRewardAddress, l2Fee)
-	log.Debug(">>> pack update")
 	data, err := tssreward.PacketData(evm.BlockNumber, l2Fee)
 	if err != nil {
-		//panic(err)
-		log.Debug(">>> ", err)
+		return nil, 0, false, err
 	}
-	log.Debug(">>> call update")
-	deadAddress := common.HexToAddress("0xD6f15EAC1Cb3B4131Ab4899a52E711e19DEeA73f")
-	zeroAddress := vm.AccountRef(deadAddress)
-	//zeroAddress := vm.AccountRef(common.Address{})
-	_, _, err = evm.Call(zeroAddress, dump.TssRewardAddress, data, 210000, big.NewInt(0))
+	deadAddress := vm.AccountRef(dump.DeadAddress)
+	_, _, err = evm.Call(deadAddress, dump.TssRewardAddress, data, 210000, big.NewInt(0))
 	if err != nil {
-		//panic(err)
-		log.Debug(">>> ", err)
+		return nil, 0, false, err
 	}
-	log.Debug(">>> pack query")
-	QueryData, err := tssreward.PacketQueryData()
-	if err != nil {
-		//panic(err)
-		log.Debug(">>> ", err)
-	}
-	log.Debug(">>> call query")
-	ret, _, err = evm.Call(zeroAddress, dump.TssRewardAddress, QueryData, 210000, big.NewInt(0))
-	if err != nil {
-		//panic(err)
-		log.Debug(">>> ", err)
-	}
-	log.Debug(">>> L2ExcuteFeeWallet balance:", string(ret))
 	return ret, st.gasUsed(), vmerr != nil, err
 }
 
