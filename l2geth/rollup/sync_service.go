@@ -178,6 +178,7 @@ func NewSyncService(ctx context.Context, cfg Config, txpool *core.TxPool, bc *co
 			for ; true; <-tStatus.C {
 				status, err := service.client.SyncStatus(service.backend)
 				if err != nil {
+					panic(err)
 					log.Error("Cannot get sync status. %s", err)
 					continue
 				}
