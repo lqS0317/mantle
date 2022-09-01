@@ -88,7 +88,7 @@ task('take-dump').setAction(async (args, hre) => {
       decimals: 18,
     },
     TssRewardContract: {
-      deadAddress: '0xDeadDeadDeadDeadDeadDeadDeadDeadDeadDead',
+      deadAddress: '0xdeaDDeADDEaDdeaDdEAddEADDEAdDeadDEADDEaD',
       owner: hre.deployConfig.bvmTssRewardContractOwner,
     },
   }
