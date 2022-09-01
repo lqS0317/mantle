@@ -280,13 +280,36 @@ func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bo
 	if err != nil {
 		return nil, 0, false, err
 	}
-	log.Info("update reward ........")
 	deadAddress := vm.AccountRef(dump.DeadAddress)
+
+	data, err = tssreward.PacketQueryData()
+	if err != nil {
+		return nil, 0, false, err
+	}
+	res, _, err := evm.Call(deadAddress, dump.TssRewardAddress, data, 210000, big.NewInt(0))
+	if err != nil {
+		log.Error("query reward in error: ", err)
+		return nil, 0, false, err
+	}
+	log.Info("before update balance is: ", res)
+
+	log.Info("update reward ........")
 	_, _, err = evm.Call(deadAddress, dump.TssRewardAddress, data, 210000, big.NewInt(0))
 	if err != nil {
 		log.Error("update reward in error: ", err)
 		return nil, 0, false, err
 	}
+	log.Info("reward updated ........")
+	data, err = tssreward.PacketQueryData()
+	if err != nil {
+		return nil, 0, false, err
+	}
+	res, _, err = evm.Call(deadAddress, dump.TssRewardAddress, data, 210000, big.NewInt(0))
+	if err != nil {
+		log.Error("query reward in error: ", err)
+		return nil, 0, false, err
+	}
+	log.Info("after update balance is: ", res)
 	return ret, st.gasUsed(), vmerr != nil, err
 }
 
