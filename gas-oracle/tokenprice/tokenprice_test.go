@@ -1,8 +1,10 @@
 package tokenprice
 
 import (
+	"net/http"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,4 +23,19 @@ func TestGetTokenPrice(t *testing.T) {
 	require.NoError(t, err)
 	t.Logf("ratio:%v", ratio)
 
+}
+
+func TestMockTokenPricer(t *testing.T) {
+	route := gin.New()
+	tokenPricer := NewClient("https://api.bybit.com", 3)
+	route.GET("/spot/quote/v1/ticker/price", func(context *gin.Context) {
+		symbol := context.Query("symbol")
+		t.Logf("symbol:%v", symbol)
+		p, err := tokenPricer.Query(symbol)
+		if err != nil {
+			t.Log(err)
+		}
+		context.JSON(http.StatusOK, p)
+	})
+	route.Run(":8000")
 }

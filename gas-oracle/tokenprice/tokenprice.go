@@ -57,7 +57,6 @@ func (c *Client) Query(symbol string) (*big.Float, error) {
 			"symbol": symbol,
 		}).
 		Get("/spot/quote/v1/ticker/price")
-
 	if err != nil {
 		return nil, fmt.Errorf("cannot fetch token price result: %w", err)
 	}
