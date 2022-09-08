@@ -1,5 +1,10 @@
 import { Provider, Block } from '@ethersproject/abstract-provider'
-import { BaseServiceV2, Counter, Gauge, validators } from '@mantlenetworkio/common-ts'
+import {
+  BaseServiceV2,
+  Counter,
+  Gauge,
+  validators,
+} from '@mantlenetworkio/common-ts'
 import { sleep } from '@mantlenetworkio/core-utils'
 
 type HealthcheckOptions = {
