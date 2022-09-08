@@ -1,7 +1,10 @@
 import hre from 'hardhat'
 import { Contract } from 'ethers'
 import { toRpcHexString } from '@mantlenetworkio/core-utils'
-import { getContractFactory, getContractInterface } from '@mantlenetworkio/contracts'
+import {
+  getContractFactory,
+  getContractInterface,
+} from '@mantlenetworkio/contracts'
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { smock, FakeContract } from '@defi-wonderland/smock'
 

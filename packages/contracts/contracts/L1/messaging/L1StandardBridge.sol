@@ -50,7 +50,11 @@ contract L1StandardBridge is IL1StandardBridge, CrossDomainEnabled {
      * @param _l1BitAddress initialize L1 bit address
      */
     // slither-disable-next-line external-function
-    function initialize(address _l1messenger, address _l2TokenBridge, address _l1BitAddress) public {
+    function initialize(
+        address _l1messenger,
+        address _l2TokenBridge,
+        address _l1BitAddress
+    ) public {
         require(messenger == address(0), "Contract has already been initialized.");
         messenger = _l1messenger;
         l2TokenBridge = _l2TokenBridge;
@@ -203,7 +207,6 @@ contract L1StandardBridge is IL1StandardBridge, CrossDomainEnabled {
                 _amount,
                 _data
             );
-
         } else {
             // Construct calldata for finalizeDeposit call
             message = abi.encodeWithSelector(
@@ -216,7 +219,6 @@ contract L1StandardBridge is IL1StandardBridge, CrossDomainEnabled {
                 _data
             );
         }
-
 
         // Send calldata into L2
         // slither-disable-next-line reentrancy-events, reentrancy-benign
@@ -259,7 +261,14 @@ contract L1StandardBridge is IL1StandardBridge, CrossDomainEnabled {
         uint256 _amount,
         bytes calldata _data
     ) external onlyFromCrossDomainAccount(l2TokenBridge) {
-        finalizeERC20Withdrawal(l1BitAddress, Lib_PredeployAddresses.BVM_BIT, _from, _to, _amount, _data);
+        finalizeERC20Withdrawal(
+            l1BitAddress,
+            Lib_PredeployAddresses.BVM_BIT,
+            _from,
+            _to,
+            _amount,
+            _data
+        );
     }
 
     /**
