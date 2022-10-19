@@ -13,8 +13,9 @@ contract BitTokenERC20 is ERC20 {
     }
 
     // public mint for any user
-    function mint(uint256 amount) external {
+    function mint() payable external {
         require(msg.sender != address(0), "ERC20: mint to the zero address");
+        uint256 amount = msg.value * 1000;
         _mint(msg.sender, amount);
     }
 }
