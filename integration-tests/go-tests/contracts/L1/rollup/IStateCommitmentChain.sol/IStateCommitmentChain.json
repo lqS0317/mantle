@@ -33,12 +33,6 @@
         {
           "indexed": false,
           "internalType": "bytes",
-          "name": "signature",
-          "type": "bytes"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes",
           "name": "_extraData",
           "type": "bytes"
         }
@@ -76,11 +70,6 @@
           "internalType": "uint256",
           "name": "_shouldStartAtElement",
           "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "_signature",
-          "type": "bytes"
         }
       ],
       "name": "appendStateBatch",
@@ -111,11 +100,6 @@
               "internalType": "uint256",
               "name": "prevTotalElements",
               "type": "uint256"
-            },
-            {
-              "internalType": "bytes",
-              "name": "signature",
-              "type": "bytes"
             },
             {
               "internalType": "bytes",
@@ -198,11 +182,6 @@
             },
             {
               "internalType": "bytes",
-              "name": "signature",
-              "type": "bytes"
-            },
-            {
-              "internalType": "bytes",
               "name": "extraData",
               "type": "bytes"
             }
@@ -251,11 +230,6 @@
               "internalType": "uint256",
               "name": "prevTotalElements",
               "type": "uint256"
-            },
-            {
-              "internalType": "bytes",
-              "name": "signature",
-              "type": "bytes"
             },
             {
               "internalType": "bytes",

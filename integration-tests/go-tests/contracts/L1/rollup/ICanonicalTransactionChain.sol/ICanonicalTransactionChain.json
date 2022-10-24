@@ -108,12 +108,6 @@
         {
           "indexed": false,
           "internalType": "bytes",
-          "name": "signature",
-          "type": "bytes"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes",
           "name": "_extraData",
           "type": "bytes"
         }

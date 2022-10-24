@@ -34,7 +34,6 @@ type LibBVMCodecChainBatchHeader struct {
 	BatchRoot         [32]byte
 	BatchSize         *big.Int
 	PrevTotalElements *big.Int
-	Signature         []byte
 	ExtraData         []byte
 }
 
@@ -46,7 +45,7 @@ type LibBVMCodecChainInclusionProof struct {
 
 // IStateCommitmentChainMetaData contains all meta data concerning the IStateCommitmentChain contract.
 var IStateCommitmentChainMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_batchIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_batchRoot\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_batchSize\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_prevTotalElements\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"StateBatchAppended\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_batchIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_batchRoot\",\"type\":\"bytes32\"}],\"name\":\"StateBatchDeleted\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_batch\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"_shouldStartAtElement\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"}],\"name\":\"appendStateBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"batchIndex\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"batchRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"batchSize\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"prevTotalElements\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\"}],\"internalType\":\"structLib_BVMCodec.ChainBatchHeader\",\"name\":\"_batchHeader\",\"type\":\"tuple\"}],\"name\":\"deleteStateBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getLastSequencerTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_lastSequencerTimestamp\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalBatches\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_totalBatches\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalElements\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_totalElements\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"batchIndex\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"batchRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"batchSize\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"prevTotalElements\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\"}],\"internalType\":\"structLib_BVMCodec.ChainBatchHeader\",\"name\":\"_batchHeader\",\"type\":\"tuple\"}],\"name\":\"insideFraudProofWindow\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_inside\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_element\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"batchIndex\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"batchRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"batchSize\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"prevTotalElements\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\"}],\"internalType\":\"structLib_BVMCodec.ChainBatchHeader\",\"name\":\"_batchHeader\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"siblings\",\"type\":\"bytes32[]\"}],\"internalType\":\"structLib_BVMCodec.ChainInclusionProof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"verifyStateCommitment\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_verified\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_batchIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_batchRoot\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_batchSize\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_prevTotalElements\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"StateBatchAppended\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_batchIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_batchRoot\",\"type\":\"bytes32\"}],\"name\":\"StateBatchDeleted\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_batch\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"_shouldStartAtElement\",\"type\":\"uint256\"}],\"name\":\"appendStateBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"batchIndex\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"batchRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"batchSize\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"prevTotalElements\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\"}],\"internalType\":\"structLib_BVMCodec.ChainBatchHeader\",\"name\":\"_batchHeader\",\"type\":\"tuple\"}],\"name\":\"deleteStateBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getLastSequencerTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_lastSequencerTimestamp\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalBatches\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_totalBatches\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalElements\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_totalElements\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"batchIndex\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"batchRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"batchSize\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"prevTotalElements\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\"}],\"internalType\":\"structLib_BVMCodec.ChainBatchHeader\",\"name\":\"_batchHeader\",\"type\":\"tuple\"}],\"name\":\"insideFraudProofWindow\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_inside\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_element\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"batchIndex\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"batchRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"batchSize\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"prevTotalElements\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\"}],\"internalType\":\"structLib_BVMCodec.ChainBatchHeader\",\"name\":\"_batchHeader\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"siblings\",\"type\":\"bytes32[]\"}],\"internalType\":\"structLib_BVMCodec.ChainInclusionProof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"verifyStateCommitment\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_verified\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // IStateCommitmentChainABI is the input ABI used to generate the binding from.
@@ -288,9 +287,9 @@ func (_IStateCommitmentChain *IStateCommitmentChainCallerSession) GetTotalElemen
 	return _IStateCommitmentChain.Contract.GetTotalElements(&_IStateCommitmentChain.CallOpts)
 }
 
-// InsideFraudProofWindow is a free data retrieval call binding the contract method 0x89a1d980.
+// InsideFraudProofWindow is a free data retrieval call binding the contract method 0x9418bddd.
 //
-// Solidity: function insideFraudProofWindow((uint256,bytes32,uint256,uint256,bytes,bytes) _batchHeader) view returns(bool _inside)
+// Solidity: function insideFraudProofWindow((uint256,bytes32,uint256,uint256,bytes) _batchHeader) view returns(bool _inside)
 func (_IStateCommitmentChain *IStateCommitmentChainCaller) InsideFraudProofWindow(opts *bind.CallOpts, _batchHeader LibBVMCodecChainBatchHeader) (bool, error) {
 	var out []interface{}
 	err := _IStateCommitmentChain.contract.Call(opts, &out, "insideFraudProofWindow", _batchHeader)
@@ -305,23 +304,23 @@ func (_IStateCommitmentChain *IStateCommitmentChainCaller) InsideFraudProofWindo
 
 }
 
-// InsideFraudProofWindow is a free data retrieval call binding the contract method 0x89a1d980.
+// InsideFraudProofWindow is a free data retrieval call binding the contract method 0x9418bddd.
 //
-// Solidity: function insideFraudProofWindow((uint256,bytes32,uint256,uint256,bytes,bytes) _batchHeader) view returns(bool _inside)
+// Solidity: function insideFraudProofWindow((uint256,bytes32,uint256,uint256,bytes) _batchHeader) view returns(bool _inside)
 func (_IStateCommitmentChain *IStateCommitmentChainSession) InsideFraudProofWindow(_batchHeader LibBVMCodecChainBatchHeader) (bool, error) {
 	return _IStateCommitmentChain.Contract.InsideFraudProofWindow(&_IStateCommitmentChain.CallOpts, _batchHeader)
 }
 
-// InsideFraudProofWindow is a free data retrieval call binding the contract method 0x89a1d980.
+// InsideFraudProofWindow is a free data retrieval call binding the contract method 0x9418bddd.
 //
-// Solidity: function insideFraudProofWindow((uint256,bytes32,uint256,uint256,bytes,bytes) _batchHeader) view returns(bool _inside)
+// Solidity: function insideFraudProofWindow((uint256,bytes32,uint256,uint256,bytes) _batchHeader) view returns(bool _inside)
 func (_IStateCommitmentChain *IStateCommitmentChainCallerSession) InsideFraudProofWindow(_batchHeader LibBVMCodecChainBatchHeader) (bool, error) {
 	return _IStateCommitmentChain.Contract.InsideFraudProofWindow(&_IStateCommitmentChain.CallOpts, _batchHeader)
 }
 
-// VerifyStateCommitment is a free data retrieval call binding the contract method 0xb768bb17.
+// VerifyStateCommitment is a free data retrieval call binding the contract method 0x4d69ee57.
 //
-// Solidity: function verifyStateCommitment(bytes32 _element, (uint256,bytes32,uint256,uint256,bytes,bytes) _batchHeader, (uint256,bytes32[]) _proof) view returns(bool _verified)
+// Solidity: function verifyStateCommitment(bytes32 _element, (uint256,bytes32,uint256,uint256,bytes) _batchHeader, (uint256,bytes32[]) _proof) view returns(bool _verified)
 func (_IStateCommitmentChain *IStateCommitmentChainCaller) VerifyStateCommitment(opts *bind.CallOpts, _element [32]byte, _batchHeader LibBVMCodecChainBatchHeader, _proof LibBVMCodecChainInclusionProof) (bool, error) {
 	var out []interface{}
 	err := _IStateCommitmentChain.contract.Call(opts, &out, "verifyStateCommitment", _element, _batchHeader, _proof)
@@ -336,58 +335,58 @@ func (_IStateCommitmentChain *IStateCommitmentChainCaller) VerifyStateCommitment
 
 }
 
-// VerifyStateCommitment is a free data retrieval call binding the contract method 0xb768bb17.
+// VerifyStateCommitment is a free data retrieval call binding the contract method 0x4d69ee57.
 //
-// Solidity: function verifyStateCommitment(bytes32 _element, (uint256,bytes32,uint256,uint256,bytes,bytes) _batchHeader, (uint256,bytes32[]) _proof) view returns(bool _verified)
+// Solidity: function verifyStateCommitment(bytes32 _element, (uint256,bytes32,uint256,uint256,bytes) _batchHeader, (uint256,bytes32[]) _proof) view returns(bool _verified)
 func (_IStateCommitmentChain *IStateCommitmentChainSession) VerifyStateCommitment(_element [32]byte, _batchHeader LibBVMCodecChainBatchHeader, _proof LibBVMCodecChainInclusionProof) (bool, error) {
 	return _IStateCommitmentChain.Contract.VerifyStateCommitment(&_IStateCommitmentChain.CallOpts, _element, _batchHeader, _proof)
 }
 
-// VerifyStateCommitment is a free data retrieval call binding the contract method 0xb768bb17.
+// VerifyStateCommitment is a free data retrieval call binding the contract method 0x4d69ee57.
 //
-// Solidity: function verifyStateCommitment(bytes32 _element, (uint256,bytes32,uint256,uint256,bytes,bytes) _batchHeader, (uint256,bytes32[]) _proof) view returns(bool _verified)
+// Solidity: function verifyStateCommitment(bytes32 _element, (uint256,bytes32,uint256,uint256,bytes) _batchHeader, (uint256,bytes32[]) _proof) view returns(bool _verified)
 func (_IStateCommitmentChain *IStateCommitmentChainCallerSession) VerifyStateCommitment(_element [32]byte, _batchHeader LibBVMCodecChainBatchHeader, _proof LibBVMCodecChainInclusionProof) (bool, error) {
 	return _IStateCommitmentChain.Contract.VerifyStateCommitment(&_IStateCommitmentChain.CallOpts, _element, _batchHeader, _proof)
 }
 
-// AppendStateBatch is a paid mutator transaction binding the contract method 0x2169f79f.
+// AppendStateBatch is a paid mutator transaction binding the contract method 0x8ca5cbb9.
 //
-// Solidity: function appendStateBatch(bytes32[] _batch, uint256 _shouldStartAtElement, bytes _signature) returns()
-func (_IStateCommitmentChain *IStateCommitmentChainTransactor) AppendStateBatch(opts *bind.TransactOpts, _batch [][32]byte, _shouldStartAtElement *big.Int, _signature []byte) (*types.Transaction, error) {
-	return _IStateCommitmentChain.contract.Transact(opts, "appendStateBatch", _batch, _shouldStartAtElement, _signature)
+// Solidity: function appendStateBatch(bytes32[] _batch, uint256 _shouldStartAtElement) returns()
+func (_IStateCommitmentChain *IStateCommitmentChainTransactor) AppendStateBatch(opts *bind.TransactOpts, _batch [][32]byte, _shouldStartAtElement *big.Int) (*types.Transaction, error) {
+	return _IStateCommitmentChain.contract.Transact(opts, "appendStateBatch", _batch, _shouldStartAtElement)
 }
 
-// AppendStateBatch is a paid mutator transaction binding the contract method 0x2169f79f.
+// AppendStateBatch is a paid mutator transaction binding the contract method 0x8ca5cbb9.
 //
-// Solidity: function appendStateBatch(bytes32[] _batch, uint256 _shouldStartAtElement, bytes _signature) returns()
-func (_IStateCommitmentChain *IStateCommitmentChainSession) AppendStateBatch(_batch [][32]byte, _shouldStartAtElement *big.Int, _signature []byte) (*types.Transaction, error) {
-	return _IStateCommitmentChain.Contract.AppendStateBatch(&_IStateCommitmentChain.TransactOpts, _batch, _shouldStartAtElement, _signature)
+// Solidity: function appendStateBatch(bytes32[] _batch, uint256 _shouldStartAtElement) returns()
+func (_IStateCommitmentChain *IStateCommitmentChainSession) AppendStateBatch(_batch [][32]byte, _shouldStartAtElement *big.Int) (*types.Transaction, error) {
+	return _IStateCommitmentChain.Contract.AppendStateBatch(&_IStateCommitmentChain.TransactOpts, _batch, _shouldStartAtElement)
 }
 
-// AppendStateBatch is a paid mutator transaction binding the contract method 0x2169f79f.
+// AppendStateBatch is a paid mutator transaction binding the contract method 0x8ca5cbb9.
 //
-// Solidity: function appendStateBatch(bytes32[] _batch, uint256 _shouldStartAtElement, bytes _signature) returns()
-func (_IStateCommitmentChain *IStateCommitmentChainTransactorSession) AppendStateBatch(_batch [][32]byte, _shouldStartAtElement *big.Int, _signature []byte) (*types.Transaction, error) {
-	return _IStateCommitmentChain.Contract.AppendStateBatch(&_IStateCommitmentChain.TransactOpts, _batch, _shouldStartAtElement, _signature)
+// Solidity: function appendStateBatch(bytes32[] _batch, uint256 _shouldStartAtElement) returns()
+func (_IStateCommitmentChain *IStateCommitmentChainTransactorSession) AppendStateBatch(_batch [][32]byte, _shouldStartAtElement *big.Int) (*types.Transaction, error) {
+	return _IStateCommitmentChain.Contract.AppendStateBatch(&_IStateCommitmentChain.TransactOpts, _batch, _shouldStartAtElement)
 }
 
-// DeleteStateBatch is a paid mutator transaction binding the contract method 0x5b4d90e2.
+// DeleteStateBatch is a paid mutator transaction binding the contract method 0xb8e189ac.
 //
-// Solidity: function deleteStateBatch((uint256,bytes32,uint256,uint256,bytes,bytes) _batchHeader) returns()
+// Solidity: function deleteStateBatch((uint256,bytes32,uint256,uint256,bytes) _batchHeader) returns()
 func (_IStateCommitmentChain *IStateCommitmentChainTransactor) DeleteStateBatch(opts *bind.TransactOpts, _batchHeader LibBVMCodecChainBatchHeader) (*types.Transaction, error) {
 	return _IStateCommitmentChain.contract.Transact(opts, "deleteStateBatch", _batchHeader)
 }
 
-// DeleteStateBatch is a paid mutator transaction binding the contract method 0x5b4d90e2.
+// DeleteStateBatch is a paid mutator transaction binding the contract method 0xb8e189ac.
 //
-// Solidity: function deleteStateBatch((uint256,bytes32,uint256,uint256,bytes,bytes) _batchHeader) returns()
+// Solidity: function deleteStateBatch((uint256,bytes32,uint256,uint256,bytes) _batchHeader) returns()
 func (_IStateCommitmentChain *IStateCommitmentChainSession) DeleteStateBatch(_batchHeader LibBVMCodecChainBatchHeader) (*types.Transaction, error) {
 	return _IStateCommitmentChain.Contract.DeleteStateBatch(&_IStateCommitmentChain.TransactOpts, _batchHeader)
 }
 
-// DeleteStateBatch is a paid mutator transaction binding the contract method 0x5b4d90e2.
+// DeleteStateBatch is a paid mutator transaction binding the contract method 0xb8e189ac.
 //
-// Solidity: function deleteStateBatch((uint256,bytes32,uint256,uint256,bytes,bytes) _batchHeader) returns()
+// Solidity: function deleteStateBatch((uint256,bytes32,uint256,uint256,bytes) _batchHeader) returns()
 func (_IStateCommitmentChain *IStateCommitmentChainTransactorSession) DeleteStateBatch(_batchHeader LibBVMCodecChainBatchHeader) (*types.Transaction, error) {
 	return _IStateCommitmentChain.Contract.DeleteStateBatch(&_IStateCommitmentChain.TransactOpts, _batchHeader)
 }
@@ -465,14 +464,13 @@ type IStateCommitmentChainStateBatchAppended struct {
 	BatchRoot         [32]byte
 	BatchSize         *big.Int
 	PrevTotalElements *big.Int
-	Signature         []byte
 	ExtraData         []byte
 	Raw               types.Log // Blockchain specific contextual infos
 }
 
-// FilterStateBatchAppended is a free log retrieval operation binding the contract event 0x9cf3ad24eae3fd6d461e2f566b35b95b6d671871d9fcb45f8ac8030e4a8d21b3.
+// FilterStateBatchAppended is a free log retrieval operation binding the contract event 0x16be4c5129a4e03cf3350262e181dc02ddfb4a6008d925368c0899fcd97ca9c5.
 //
-// Solidity: event StateBatchAppended(uint256 indexed _batchIndex, bytes32 _batchRoot, uint256 _batchSize, uint256 _prevTotalElements, bytes signature, bytes _extraData)
+// Solidity: event StateBatchAppended(uint256 indexed _batchIndex, bytes32 _batchRoot, uint256 _batchSize, uint256 _prevTotalElements, bytes _extraData)
 func (_IStateCommitmentChain *IStateCommitmentChainFilterer) FilterStateBatchAppended(opts *bind.FilterOpts, _batchIndex []*big.Int) (*IStateCommitmentChainStateBatchAppendedIterator, error) {
 
 	var _batchIndexRule []interface{}
@@ -487,9 +485,9 @@ func (_IStateCommitmentChain *IStateCommitmentChainFilterer) FilterStateBatchApp
 	return &IStateCommitmentChainStateBatchAppendedIterator{contract: _IStateCommitmentChain.contract, event: "StateBatchAppended", logs: logs, sub: sub}, nil
 }
 
-// WatchStateBatchAppended is a free log subscription operation binding the contract event 0x9cf3ad24eae3fd6d461e2f566b35b95b6d671871d9fcb45f8ac8030e4a8d21b3.
+// WatchStateBatchAppended is a free log subscription operation binding the contract event 0x16be4c5129a4e03cf3350262e181dc02ddfb4a6008d925368c0899fcd97ca9c5.
 //
-// Solidity: event StateBatchAppended(uint256 indexed _batchIndex, bytes32 _batchRoot, uint256 _batchSize, uint256 _prevTotalElements, bytes signature, bytes _extraData)
+// Solidity: event StateBatchAppended(uint256 indexed _batchIndex, bytes32 _batchRoot, uint256 _batchSize, uint256 _prevTotalElements, bytes _extraData)
 func (_IStateCommitmentChain *IStateCommitmentChainFilterer) WatchStateBatchAppended(opts *bind.WatchOpts, sink chan<- *IStateCommitmentChainStateBatchAppended, _batchIndex []*big.Int) (event.Subscription, error) {
 
 	var _batchIndexRule []interface{}
@@ -529,9 +527,9 @@ func (_IStateCommitmentChain *IStateCommitmentChainFilterer) WatchStateBatchAppe
 	}), nil
 }
 
-// ParseStateBatchAppended is a log parse operation binding the contract event 0x9cf3ad24eae3fd6d461e2f566b35b95b6d671871d9fcb45f8ac8030e4a8d21b3.
+// ParseStateBatchAppended is a log parse operation binding the contract event 0x16be4c5129a4e03cf3350262e181dc02ddfb4a6008d925368c0899fcd97ca9c5.
 //
-// Solidity: event StateBatchAppended(uint256 indexed _batchIndex, bytes32 _batchRoot, uint256 _batchSize, uint256 _prevTotalElements, bytes signature, bytes _extraData)
+// Solidity: event StateBatchAppended(uint256 indexed _batchIndex, bytes32 _batchRoot, uint256 _batchSize, uint256 _prevTotalElements, bytes _extraData)
 func (_IStateCommitmentChain *IStateCommitmentChainFilterer) ParseStateBatchAppended(log types.Log) (*IStateCommitmentChainStateBatchAppended, error) {
 	event := new(IStateCommitmentChainStateBatchAppended)
 	if err := _IStateCommitmentChain.contract.UnpackLog(event, "StateBatchAppended", log); err != nil {
