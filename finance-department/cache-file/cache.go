@@ -7,7 +7,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/mantlenetworkio/mantle/subsidy/types"
+	"github.com/mantlenetworkio/mantle/finance-department/types"
 )
 
 type PayerStateFileWriter struct {

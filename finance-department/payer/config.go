@@ -8,7 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/mantlenetworkio/mantle/subsidy/flags"
+	"github.com/mantlenetworkio/mantle/finance-department/flags"
 	"github.com/urfave/cli"
 )
 

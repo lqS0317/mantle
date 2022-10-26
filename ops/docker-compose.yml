@@ -257,7 +257,7 @@ services:
   subsidy:
     build:
       context: ..
-      dockerfile: ./subsidy/Dockerfile
+      dockerfile: ../finance-department/Dockerfile
     image: mantlenetworkio/subsidy:${DOCKER_TAG_SUBSIDY:-latest}
     environment:
       SUBSIDY_ETHEREUM_HTTP_URL: ${SUBSIDY_ETHEREUM_HTTP_URL:-https://eth-goerli.g.alchemy.com/v2/821_LFssCCQnEG3mHnP7tSrc87IQKsUp}

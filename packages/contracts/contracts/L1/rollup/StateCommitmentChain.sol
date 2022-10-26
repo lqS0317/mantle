@@ -113,6 +113,11 @@ contract StateCommitmentChain is IStateCommitmentChain, Lib_AddressResolver {
         // Pass the block's timestamp and the publisher of the data
         // to be used in the fraud proofs
         _appendBatch(_batch, _signature, abi.encode(block.timestamp, msg.sender));
+
+
+        // Update distributed state batch, and emit message
+        // TODO
+        _distributeTssReward();
     }
 
     /**
@@ -312,6 +317,37 @@ contract StateCommitmentChain is IStateCommitmentChain, Lib_AddressResolver {
 
         // slither-disable-next-line reentrancy-events
         emit StateBatchDeleted(_batchHeader.batchIndex, _batchHeader.batchRoot);
+    }
+
+    /**
+ * Checks that a batch header matches the stored hash for the given index.
+ * @param _batch Submit batch data.
+     * @param _shouldStartAtElement or not the header matches the stored one.
+     */
+    function _distributeTssReward() internal {
+        // get address of tss group member
+        address[] memory tssMembers = ITssGroupManager(resolve("TssGroupManager")).getTssGroupUnJailMembers();
+        require(tssMembers.length > 0, "get tss members in error");
+
+        // construct calldata for claimReward call
+        bytes memory message = abi.encodeWithSelector(
+            ITssRewardContract.claimReward.selector,
+            block.timestamp,
+            tssMembers
+        );
+
+        // send call data into L2, hardcode address
+        sendCrossDomainMessage(
+            address(0x4200000000000000000000000000000000000020),
+            200_000,
+            message
+        );
+
+        // emit message
+        emit DistributeTssReward(
+            block.timestamp,
+            tssMembers
+        );
     }
 
     /**
