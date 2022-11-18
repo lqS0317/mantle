@@ -12,6 +12,24 @@ import {
   getContractFromArtifact,
 } from '../src/deploy-utils'
 
+// run one terminal with `npx hardhat node --no-deploy`
+// in another run `npx hardhat deploy --tags DataAvailability`
+
+/* disable autmoning with
+curl -H "Content-Type: application/json" -X POST --data \
+        '{"id":1337,"jsonrpc":"2.0","method":"evm_setAutomine","params":[false]}' \
+        http://localhost:8545
+
+      and then mine with
+
+
+      curl -H "Content-Type: application/json" -X POST --data \
+        '{"id":1337,"jsonrpc":"2.0","method":"evm_setIntervalMining","params":[false]}' \
+        http://localhost:8545
+
+        run these in a third terminal when the node is up and running
+
+*/
 const deployFn: DeployFunction = async (hre) => {
   const { deployer } = await hre.getNamedAccounts()
 
@@ -22,10 +40,10 @@ const deployFn: DeployFunction = async (hre) => {
   console.log('call EigenLayr DataLayr deployer')
 
   console.log('deploying and verifying EigenDataLayr')
-  const rpc = 'http://127.0.0.1:8545'
+  const rpc = 'http://127.0.0.1:8545' // HACK get from hre
   console.log({ rpc })
   const deployerPrivateKey =
-    '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+    '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80' // HACK get from hre
   console.log({ deployerPrivateKey })
   console.log('deploying dlsm')
   spawnSync(
@@ -37,7 +55,7 @@ const deployFn: DeployFunction = async (hre) => {
 
   // now get addresses from out directory
   // const _dlsm = require('../../datalayr-mantle/contracts/eignlayr-contracts/data/dlsm.json')
-  const _dlsm = '0x2E2Ed0Cfd3AD2f1d34481277b3204d807Ca2F8c2'
+  const _dlsm = '0x2E2Ed0Cfd3AD2f1d34481277b3204d807Ca2F8c2' // HACK get from file above
   console.log({ _dlsm })
 
   // get the EigenDataLayrRollup contract bytecode
@@ -53,6 +71,7 @@ const deployFn: DeployFunction = async (hre) => {
   const factory = new ethers.ContractFactory(contractABI, contractBytecode)
   console.log('deploying EigenDataLayrRollup ...')
 
+  // the datalayr rollup contract has the following params:
   // address _sequencer,
   // IERC20 _stakeToken,
   // uint256 _neededStake,

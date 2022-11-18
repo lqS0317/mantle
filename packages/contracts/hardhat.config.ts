@@ -30,7 +30,7 @@ import { subtask } from 'hardhat/config'
 import {
   TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS,
   TASK_COMPILE_SOLIDITY_LOG_COMPILATION_RESULT,
-  TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE
+  TASK_COMPILE_SOLIDITY_LOG_NOTHING_TO_COMPILE,
 } from 'hardhat/builtin-tasks/task-names'
 
 import { readFileSync, writeFileSync } from 'fs'
@@ -48,12 +48,12 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS).setAction(
       './contracts/data-availability/eignlayr-contracts/'
     )
 
-    console.log("FORGE BUILD")
+    console.log('FORGE BUILD')
     spawnSync('cd ./contracts/data-availability && forge build', [], {
       shell: true,
       stdio: 'inherit',
     })
-    console.log("FORGE BUILD END")
+    console.log('FORGE BUILD END')
 
     const paths = await runSuper()
     const filteredPaths = paths.filter(function (p) {
