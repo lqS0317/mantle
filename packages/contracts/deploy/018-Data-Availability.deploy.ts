@@ -12,7 +12,7 @@ import {
   getContractFromArtifact,
 } from '../src/deploy-utils'
 
-// run one terminal with `npx hardhat node --no-deploy`
+// run one terminal with `npx hardhat node --no-deploy` in packages/contracts
 // in another run `npx hardhat deploy --tags DataAvailability`
 
 /* disable autmoning with
@@ -24,7 +24,7 @@ curl -H "Content-Type: application/json" -X POST --data \
 
 
       curl -H "Content-Type: application/json" -X POST --data \
-        '{"id":1337,"jsonrpc":"2.0","method":"evm_setIntervalMining","params":[false]}' \
+        '{"id":1337,"jsonrpc":"2.0","method":"evm_setIntervalMining","params":[500]}' \
         http://localhost:8545
 
         run these in a third terminal when the node is up and running
@@ -80,7 +80,14 @@ const deployFn: DeployFunction = async (hre) => {
   const _sequencer = hre.deployConfig.bvmSequencerAddress
   const _stakeToken = hre.deployConfig.l1BitAddress
   const _neededStake = hre.deployConfig.requiredDAStakeAmount
-  const datalayrRollup = await factory.deploy(
+
+  // create http provider from the rpc given
+  let httpProvider = new ethers.providers.JsonRpcProvider(rpc);
+
+  // create signer from the private key above
+  const signer = new ethers.Wallet(deployerPrivateKey, httpProvider);
+
+  const datalayrRollup = await factory.connect(signer).deploy(
     _sequencer,
     _stakeToken,
     _neededStake,
@@ -89,15 +96,42 @@ const deployFn: DeployFunction = async (hre) => {
 
   console.log('deploy EigenDataLayrRollup success at ', datalayrRollup.address)
 
-  // deploy proxy
-  const Impl_EigenDataLayrRollup = await getContractFromArtifact(
+  // DEPLOY CTC
+
+  const Lib_AddressManager = await getContractFromArtifact(
     hre,
-    names.managed.contracts.EigenDataLayrRollup,
-    {
-      iface: 'EigenDataLayrRollup',
-      signerOrProvider: deployer,
-    }
+    names.unmanaged.Lib_AddressManager
   )
+
+  await deployAndVerifyAndThen({
+    hre,
+    name: names.managed.contracts.CanonicalTransactionChain,
+    args: [
+      Lib_AddressManager.address,
+      hre.deployConfig.l2BlockGasLimit,
+      hre.deployConfig.ctcL2GasDiscountDivisor,
+      hre.deployConfig.ctcEnqueueGasCost,
+    ],
+  })
+
+  const CanonicalTransactionChain = await getContractFromArtifact(
+    hre,
+    names.managed.contracts.CanonicalTransactionChain
+  )
+
+
+
+    console.log('deploy CTC success at ', CanonicalTransactionChain.address)
+
+  // // deploy proxy
+  // const Impl_EigenDataLayrRollup = await getContractFromArtifact(
+  //   hre,
+  //   names.managed.contracts.EigenDataLayrRollup,
+  //   {
+  //     iface: 'EigenDataLayrRollup',
+  //     signerOrProvider: deployer,
+  //   }
+  // )
 }
 
 // This is kept during an upgrade. So no upgrade tag.
