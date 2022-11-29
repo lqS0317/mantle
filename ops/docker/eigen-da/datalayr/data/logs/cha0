@@ -1,0 +1,1 @@
+{"level":"error","error":"Post \"http://host.docker.internal:8000/subgraphs/name/datalayr\": read tcp 192.168.96.5:59118->192.168.65.2:8000: read: connection reset by peer","time":"2022-11-28T16:16:51Z","caller":"/app/middleware/rollup-example/challenger/challenger.go:190","message":"GetExpiringDataStores error"}

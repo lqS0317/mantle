@@ -1,0 +1,9 @@
+{"level":"info","time":"2022-11-29T02:55:23Z","caller":"/app/dl-node/server.go:67","message":"Setting up kzgConfig"}
+{"level":"warn","error":"deployment `datalayr` does not exist","time":"2022-11-29T02:55:24Z","caller":"/app/common/graphView/client.go:51","message":"Error connecting to subgraph"}
+{"level":"warn","error":"deployment `datalayr` does not exist","time":"2022-11-29T02:55:26Z","caller":"/app/common/graphView/client.go:51","message":"Error connecting to subgraph"}
+{"level":"warn","error":"deployment `datalayr` does not exist","time":"2022-11-29T02:55:30Z","caller":"/app/common/graphView/client.go:51","message":"Error connecting to subgraph"}
+{"level":"warn","error":"deployment `datalayr` does not exist","time":"2022-11-29T02:55:38Z","caller":"/app/common/graphView/client.go:51","message":"Error connecting to subgraph"}
+{"level":"warn","error":"deployment `datalayr` does not exist","time":"2022-11-29T02:55:54Z","caller":"/app/common/graphView/client.go:51","message":"Error connecting to subgraph"}
+{"level":"warn","error":"deployment `datalayr` does not exist","time":"2022-11-29T02:56:26Z","caller":"/app/common/graphView/client.go:51","message":"Error connecting to subgraph"}
+{"level":"warn","error":"deployment `datalayr` does not exist","time":"2022-11-29T02:57:30Z","caller":"/app/common/graphView/client.go:51","message":"Error connecting to subgraph"}
+{"level":"warn","error":"deployment `datalayr` does not exist","time":"2022-11-29T02:59:38Z","caller":"/app/common/graphView/client.go:51","message":"Error connecting to subgraph"}

@@ -1,0 +1,66 @@
+services:
+    cha0:
+        image: ghcr.io/layr-labs/datalayr/rollup-challenger:latest
+        volumes:
+            - ./data:/data
+        ports:
+            - 32014:32014
+        env_file:
+            - envs/cha0.env
+        command: []
+    dis0:
+        image: ghcr.io/layr-labs/datalayr/dl-disperser:latest
+        volumes:
+            - ./data:/data
+        ports:
+            - 32001:32001
+        env_file:
+            - envs/dis0.env
+        command: []
+    dln0:
+        image: ghcr.io/layr-labs/datalayr/dl-node:latest
+        volumes:
+            - ./data:/data
+        ports:
+            - 32003:32003
+        env_file:
+            - envs/dln0.env
+        command: []
+    dln1:
+        image: ghcr.io/layr-labs/datalayr/dl-node:latest
+        volumes:
+            - ./data:/data
+        ports:
+            - 32005:32005
+        env_file:
+            - envs/dln1.env
+        command: []
+    dln2:
+        image: ghcr.io/layr-labs/datalayr/dl-node:latest
+        volumes:
+            - ./data:/data
+        ports:
+            - 32007:32007
+        env_file:
+            - envs/dln2.env
+        command: []
+    dln3:
+        image: ghcr.io/layr-labs/datalayr/dl-node:latest
+        volumes:
+            - ./data:/data
+        ports:
+            - 32009:32009
+        env_file:
+            - envs/dln3.env
+        command: []
+    ret0:
+        image: ghcr.io/layr-labs/datalayr/dl-retriever:latest
+        volumes:
+            - ./data:/data
+        ports:
+            - 32011:32011
+        env_file:
+            - envs/ret0.env
+        command:
+            - svc
+

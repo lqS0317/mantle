@@ -1,0 +1,207 @@
+path: ./data/28D-11M-2022Y-09H-03M-17S
+environment:
+    name: staging
+    type: local
+deployers:
+    - name: default
+      rpc: http://0.0.0.0:8545
+      verifierUrl: http://localhost:4000/api
+      verifyContracts: false
+    - name: seq0
+      rpc: http://0.0.0.0:8545
+      verifierUrl: http://localhost:4000/api
+      verifyContracts: false
+eigenlayer:
+    deployer: default
+    delegation: 0x2EE8C0cf5f5fAe78F4128fe53182bB09de51F745
+    dlregistry: 0x737750230ac71915875f297A5C330A9cf58EE4E4
+    investmentmanager: 0x96aa2ace20355BAF6e155D598883AbfCF3f7b40e
+    dlrepository: 0xA190F1786e5E15204ebDf0a487668CB34881F381
+    dlservicemanager: 0xd90f9BDab327c204B86f9De19dFd3b0128fCc6aD
+    eigen: 0x1b119a80664318877efE44c5b37784803882c6A8
+    eigenstrat: 0xC09e0A3c8fAC97297314c8619B68Fcb4A185495e
+    weth: 0x5Ee58A2def7143E2d61DE91Eb28ebf7820Abd7AB
+    wethstrat: 0xe8d892c40B4F37386fDF409f4aa968504b664Ee0
+rollup:
+    deployer: seq0
+    datalayrRollup: ""
+privateKeys:
+    file: ./geth-node/secret/private-keys.txt
+    list: []
+    map:
+        cha0: 0xaf79fc03e34dcaf72275a99d94bbd19b76a7a93c62366974ce5332e21e396c40
+        default: 0x1a5843a0c64beab41ae8b1059f30db49339019d9b31a42f61577aae58976ee68
+        dis0: 0x0985b8e385027822d2e1d7a94ed1a1949d198e187d62e4c3e0bfbc7e6bc9fecb
+        dln0: 0x5b2c2c40c30dab73f99a257a630e3075805165984701c93ccd8cc1a0bed41357
+        dln1: 0x57307ad3c4103598e12a93b9e09e9655905772664bfddbc611bceb219ae14273
+        dln2: 0x26d38ba3c1727c49b5f025093ef2af54145fa5671fe84a13c645617dff4df67c
+        dln3: 0x053b71217b8f58fa872ddf99d825276753e450c843b1d3166fcbc3836489ca18
+        ret0: 0xa2c4b1d603d5b13f636cdaad36891ad95ee4b8dea831a40770aace0872ca6df2
+        seq0: 0x22d18cb021555a7c7857e49b558e0c8dc5812a7e63b3d79460668a57ffd244fe
+        staker0: 0x5ff83d8826787dadbabcc8da63c5d135b91a7dcd866fa52bf2921a2440f57671
+        staker1: 0x4a89be45024933a3ae00d792aa16f2c07fed97fe85a9ee1a9bd7588623d2e655
+        staker2: 0x0a167be5def66ab281049c62807d7e41d642122b68cf9a796ab5fb6f83b4a7af
+        staker3: 0x1e42f0c6b4d708e38fb8123e88e1b1fa9896d3ca9ff6917b664dea3cb1cfbf36
+services:
+    counts:
+        dispersers: 1
+        operators: 4
+        retrievers: 1
+        rollupSequencers: 1
+        rollupChallengers: 1
+    basePort: 32000
+    globals:
+        HOSTNAME: 0.0.0.0
+        TIMEOUT: 3000ms
+        CHAIN_PROVIDER: http://0.0.0.0:8545
+        CHAIN_ID: 40525
+        GRAPH_PROVIDER: http://0.0.0.0:8000/subgraphs/name/datalayr
+        G1_PATH: data/kzg/g1.point
+        G2_PATH: data/kzg/g2.point
+        SRS_TABLE_PATH: data/kzg/SRSTables
+        ORDER: 3000
+        CHALLENGE_ORDER: 3000
+dispersers:
+    - dl_disperser_hostname: 0.0.0.0
+      dl_disperser_grpc_port: "32001"
+      dl_disperser_timeout: 3000ms
+      dl_disperser_polling_retry: "1"
+      dl_disperser_db_path: ./data/28D-11M-2022Y-09H-03M-17S/db/dis0
+      dl_disperser_chain_id: "40525"
+      dl_disperser_chain_provider: http://0.0.0.0:8545
+      dl_disperser_graph_provider: http://0.0.0.0:8000/subgraphs/name/datalayr
+      dl_disperser_private: 0985b8e385027822d2e1d7a94ed1a1949d198e187d62e4c3e0bfbc7e6bc9fecb
+      dl_disperser_dlr_address: 0xA190F1786e5E15204ebDf0a487668CB34881F381
+      dl_disperser_g1_path: data/kzg/g1.point
+      dl_disperser_g2_path: data/kzg/g2.point
+      dl_disperser_srs_table_path: data/kzg/SRSTables
+      dl_disperser_order: "3000"
+      dl_disperser_use_cache: ""
+      dl_disperser_std_log_level: debug
+      dl_disperser_file_log_level: trace
+      dl_disperser_log_path: ./data/28D-11M-2022Y-09H-03M-17S/logs/dis0
+operators:
+    - dl_node_hostname: 0.0.0.0
+      dl_node_grpc_port: "32003"
+      dl_node_timeout: 3000ms
+      dl_node_db_path: ./data/28D-11M-2022Y-09H-03M-17S/db/dln0
+      dl_node_chain_id: "40525"
+      dl_node_chain_provider: http://0.0.0.0:8545
+      dl_node_graph_provider: http://0.0.0.0:8000/subgraphs/name/datalayr
+      dl_node_private: 5b2c2c40c30dab73f99a257a630e3075805165984701c93ccd8cc1a0bed41357
+      dl_node_private_bls: "1432518515"
+      dl_node_dlr_address: 0xA190F1786e5E15204ebDf0a487668CB34881F381
+      dl_node_g1_path: data/kzg/g1.point
+      dl_node_g2_path: data/kzg/g2.point
+      dl_node_srs_table_path: data/kzg/SRSTables
+      dl_node_order: "3000"
+      dl_node_challenge_order: "3000"
+      dl_node_std_log_level: debug
+      dl_node_file_log_level: trace
+      dl_node_log_path: ./data/28D-11M-2022Y-09H-03M-17S/logs/dln0
+    - dl_node_hostname: 0.0.0.0
+      dl_node_grpc_port: "32005"
+      dl_node_timeout: 3000ms
+      dl_node_db_path: ./data/28D-11M-2022Y-09H-03M-17S/db/dln1
+      dl_node_chain_id: "40525"
+      dl_node_chain_provider: http://0.0.0.0:8545
+      dl_node_graph_provider: http://0.0.0.0:8000/subgraphs/name/datalayr
+      dl_node_private: 57307ad3c4103598e12a93b9e09e9655905772664bfddbc611bceb219ae14273
+      dl_node_private_bls: "3617697886"
+      dl_node_dlr_address: 0xA190F1786e5E15204ebDf0a487668CB34881F381
+      dl_node_g1_path: data/kzg/g1.point
+      dl_node_g2_path: data/kzg/g2.point
+      dl_node_srs_table_path: data/kzg/SRSTables
+      dl_node_order: "3000"
+      dl_node_challenge_order: "3000"
+      dl_node_std_log_level: debug
+      dl_node_file_log_level: trace
+      dl_node_log_path: ./data/28D-11M-2022Y-09H-03M-17S/logs/dln1
+    - dl_node_hostname: 0.0.0.0
+      dl_node_grpc_port: "32007"
+      dl_node_timeout: 3000ms
+      dl_node_db_path: ./data/28D-11M-2022Y-09H-03M-17S/db/dln2
+      dl_node_chain_id: "40525"
+      dl_node_chain_provider: http://0.0.0.0:8545
+      dl_node_graph_provider: http://0.0.0.0:8000/subgraphs/name/datalayr
+      dl_node_private: 26d38ba3c1727c49b5f025093ef2af54145fa5671fe84a13c645617dff4df67c
+      dl_node_private_bls: "3148201956"
+      dl_node_dlr_address: 0xA190F1786e5E15204ebDf0a487668CB34881F381
+      dl_node_g1_path: data/kzg/g1.point
+      dl_node_g2_path: data/kzg/g2.point
+      dl_node_srs_table_path: data/kzg/SRSTables
+      dl_node_order: "3000"
+      dl_node_challenge_order: "3000"
+      dl_node_std_log_level: debug
+      dl_node_file_log_level: trace
+      dl_node_log_path: ./data/28D-11M-2022Y-09H-03M-17S/logs/dln2
+    - dl_node_hostname: 0.0.0.0
+      dl_node_grpc_port: "32009"
+      dl_node_timeout: 3000ms
+      dl_node_db_path: ./data/28D-11M-2022Y-09H-03M-17S/db/dln3
+      dl_node_chain_id: "40525"
+      dl_node_chain_provider: http://0.0.0.0:8545
+      dl_node_graph_provider: http://0.0.0.0:8000/subgraphs/name/datalayr
+      dl_node_private: 053b71217b8f58fa872ddf99d825276753e450c843b1d3166fcbc3836489ca18
+      dl_node_private_bls: "3008659646"
+      dl_node_dlr_address: 0xA190F1786e5E15204ebDf0a487668CB34881F381
+      dl_node_g1_path: data/kzg/g1.point
+      dl_node_g2_path: data/kzg/g2.point
+      dl_node_srs_table_path: data/kzg/SRSTables
+      dl_node_order: "3000"
+      dl_node_challenge_order: "3000"
+      dl_node_std_log_level: debug
+      dl_node_file_log_level: trace
+      dl_node_log_path: ./data/28D-11M-2022Y-09H-03M-17S/logs/dln3
+retrievers:
+    - dl_retriever_hostname: 0.0.0.0
+      dl_retriever_grpc_port: "32011"
+      dl_retriever_timeout: 3000ms
+      dl_retriever_chain_id: "40525"
+      dl_retriever_chain_provider: http://0.0.0.0:8545
+      dl_retriever_graph_provider: http://0.0.0.0:8000/subgraphs/name/datalayr
+      dl_retriever_dlr_address: 0xA190F1786e5E15204ebDf0a487668CB34881F381
+      dl_retriever_g1_path: data/kzg/g1.point
+      dl_retriever_g2_path: data/kzg/g2.point
+      dl_retriever_srs_table_path: data/kzg/SRSTables
+      dl_retriever_order: "3000"
+      dl_retriever_std_log_level: debug
+      dl_retriever_file_log_level: trace
+      dl_retriever_log_path: ./data/28D-11M-2022Y-09H-03M-17S/logs/ret0
+stakers:
+    - address: 0xE1D0D0ADf2e30710Ec9C009130a399031e76653D
+      private: 5ff83d8826787dadbabcc8da63c5d135b91a7dcd866fa52bf2921a2440f57671
+    - address: 0x4F492dae6157E0D2cBd9C93499E38964089DC811
+      private: 4a89be45024933a3ae00d792aa16f2c07fed97fe85a9ee1a9bd7588623d2e655
+    - address: 0x6627b6917fe0b16be1199A921485C332DF163847
+      private: 0a167be5def66ab281049c62807d7e41d642122b68cf9a796ab5fb6f83b4a7af
+    - address: 0x21b3C67f628308F9CB91eD5a1E1fA3aF3D62bD66
+      private: 1e42f0c6b4d708e38fb8123e88e1b1fa9896d3ca9ff6917b664dea3cb1cfbf36
+sequencers:
+    - sequencer_disperser: 0.0.0.0:32001
+      sequencer_grpc_port: "32013"
+      sequencer_chain_id: "40525"
+      sequencer_chain_provider: http://0.0.0.0:8545
+      sequencer_graph_provider: http://0.0.0.0:8000/subgraphs/name/datalayr
+      sequencer_private: 22d18cb021555a7c7857e49b558e0c8dc5812a7e63b3d79460668a57ffd244fe
+      sequencer_rollup_address: ""
+      sequencer_duration: "1"
+      sequencer_timeout: "100000000000"
+      sequencer_std_log_level: debug
+      sequencer_file_log_level: trace
+      sequencer_log_path: ./data/28D-11M-2022Y-09H-03M-17S/logs/seq0
+challengers:
+    - challenger_retriever: 0.0.0.0:32011
+      challenger_chain_id: "40525"
+      challenger_chain_provider: http://0.0.0.0:8545
+      challenger_graph_provider: http://0.0.0.0:8000/subgraphs/name/datalayr
+      challenger_private: af79fc03e34dcaf72275a99d94bbd19b76a7a93c62366974ce5332e21e396c40
+      challenger_rollup_address: ""
+      challenger_g1_path: data/kzg/g1.point
+      challenger_g2_path: data/kzg/g2.point
+      challenger_srs_table_path: data/kzg/SRSTables
+      challenger_order: "3000"
+      challenger_kzg_num_workers: "4"
+      challenger_std_log_level: debug
+      challenger_file_log_level: trace
+      challenger_log_path: ./data/28D-11M-2022Y-09H-03M-17S/logs/cha0
