@@ -112,9 +112,6 @@ func (pm *ProtocolManager) handleConsensusMsg(p *peer) error {
 	case msg.Code == BatchPeriodEndMsg:
 		// todo: BatchPeriodEndMsg handle
 		log.Info("Batch Period End Msg")
-	case msg.Code == FraudProofReorgMsg:
-		// todo: FraudProofReorgMsg handle
-		log.Info("Fraud Proof Reorg Msg")
 
 	default:
 		return errResp(ErrInvalidMsgCode, "%v", msg.Code)
@@ -187,27 +184,6 @@ func (p *peer) AsyncSendBatchPeriodEndMsg(msg *types.BatchPeriodEndMsg) {
 	}
 }
 
-//func (pm *ProtocolManager) BroadcastFraudProofReorgMsg(reorg *types.FraudProofReorgMsg) {
-//	peers := pm.peersTmp.PeersWithoutFraudProofReorgMsg(reorg.ReorgIndex)
-//	for _, p := range peers {
-//		p.AsyncSendFraudProofReorgMsg(reorg)
-//	}
-//	log.Trace("Broadcast fraud proof reorg msg")
-//}
-
-//func (p *peer) AsyncSendFraudProofReorgMsg(reorg *types.FraudProofReorgMsg) {
-//	select {
-//	case p.queuedFraudProofReorg <- reorg:
-//		p.knowFraudProofReorg.Add(reorg.ReorgIndex)
-//		for p.knowFraudProofReorg.Cardinality() >= maxKnownPrs {
-//			p.knowFraudProofReorg.Pop()
-//		}
-//
-//	default:
-//		p.Log().Debug("Dropping producers propagation", "reorg index", reorg.ReorgIndex)
-//	}
-//}
-
 // ---------------------------- Proposers ----------------------------
 
 // SendBatchPeriodStart sends a batch of transaction receipts, corresponding to the
@@ -228,13 +204,4 @@ func (p *peer) SendBatchPeriodEnd(be *types.BatchPeriodEndMsg) error {
 		p.knowEndMsg.Pop()
 	}
 	return p2p.Send(p.rw, BatchPeriodEndMsg, be)
-}
-
-func (p *peer) SendFraudProofReorg(fpr *types.FraudProofReorgMsg) error {
-	p.knowFraudProofReorg.Add(fpr.ReorgIndex)
-	// Mark all the producers as known, but ensure we don't overflow our limits
-	for p.knowFraudProofReorg.Cardinality() >= maxKnownPrs {
-		p.knowFraudProofReorg.Pop()
-	}
-	return p2p.Send(p.rw, FraudProofReorgMsg, fpr)
 }

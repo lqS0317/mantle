@@ -82,9 +82,3 @@ type BatchPeriodEndMsg struct {
 	Signatures   [][]byte
 	Signature    []byte
 }
-
-type FraudProofReorgMsg struct {
-	ReorgIndex    uint64
-	ReorgToHeight uint64
-	TssSignature  []byte
-}
