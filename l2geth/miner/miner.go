@@ -136,7 +136,6 @@ func (miner *Miner) MockScheduler(startHeight, maxHeight, exTime uint64, erCh ch
 		ExpireTime:  exTime,
 		ErrCh:       erCh,
 	}
-
 	index++
 }
 
