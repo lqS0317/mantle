@@ -187,36 +187,26 @@ func (p *peer) AsyncSendBatchPeriodEndMsg(msg *types.BatchPeriodEndMsg) {
 	}
 }
 
-// FraudProofReorgMsg
-func (pm *ProtocolManager) fraudProofReorgMsgBroadcastLoop() {
-	// automatically stops if unsubscribe
-	for obj := range pm.fraudProofReorgMsgSub.Chan() {
-		if fe, ok := obj.Data.(core.FraudProofReorgEvent); ok {
-			pm.BroadcastFraudProofReorgMsg(fe.Msg) // First propagate block to peers
-		}
-	}
-}
+//func (pm *ProtocolManager) BroadcastFraudProofReorgMsg(reorg *types.FraudProofReorgMsg) {
+//	peers := pm.peersTmp.PeersWithoutFraudProofReorgMsg(reorg.ReorgIndex)
+//	for _, p := range peers {
+//		p.AsyncSendFraudProofReorgMsg(reorg)
+//	}
+//	log.Trace("Broadcast fraud proof reorg msg")
+//}
 
-func (pm *ProtocolManager) BroadcastFraudProofReorgMsg(reorg *types.FraudProofReorgMsg) {
-	peers := pm.peersTmp.PeersWithoutFraudProofReorgMsg(reorg.ReorgIndex)
-	for _, p := range peers {
-		p.AsyncSendFraudProofReorgMsg(reorg)
-	}
-	log.Trace("Broadcast fraud proof reorg msg")
-}
-
-func (p *peer) AsyncSendFraudProofReorgMsg(reorg *types.FraudProofReorgMsg) {
-	select {
-	case p.queuedFraudProofReorg <- reorg:
-		p.knowFraudProofReorg.Add(reorg.ReorgIndex)
-		for p.knowFraudProofReorg.Cardinality() >= maxKnownPrs {
-			p.knowFraudProofReorg.Pop()
-		}
-
-	default:
-		p.Log().Debug("Dropping producers propagation", "reorg index", reorg.ReorgIndex)
-	}
-}
+//func (p *peer) AsyncSendFraudProofReorgMsg(reorg *types.FraudProofReorgMsg) {
+//	select {
+//	case p.queuedFraudProofReorg <- reorg:
+//		p.knowFraudProofReorg.Add(reorg.ReorgIndex)
+//		for p.knowFraudProofReorg.Cardinality() >= maxKnownPrs {
+//			p.knowFraudProofReorg.Pop()
+//		}
+//
+//	default:
+//		p.Log().Debug("Dropping producers propagation", "reorg index", reorg.ReorgIndex)
+//	}
+//}
 
 // ---------------------------- Proposers ----------------------------
 

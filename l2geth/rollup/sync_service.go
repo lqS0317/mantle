@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/mantlenetworkio/mantle/l2geth/rollup/dump"
 	"math/big"
 	"strconv"
 	"sync"
@@ -1372,8 +1373,13 @@ func (s *SyncService) syncQueueTransactionRange(start, end uint64) error {
 		if err != nil {
 			return fmt.Errorf("Canot get enqueue transaction; %w", err)
 		}
-		if err := s.applyTransaction(tx); err != nil {
-			return fmt.Errorf("Cannot apply transaction: %w", err)
+		if tx.To() != nil && *tx.To() == dump.BvmReorgAddress {
+			if err := s.applyTransaction(tx); err != nil {
+				return fmt.Errorf("Cannot apply transaction: %w", err)
+			}
+		} else {
+			// TODO Some necessary validation
+			s.txpool.AddLocals([]*types.Transaction{tx})
 		}
 	}
 	return nil

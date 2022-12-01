@@ -271,9 +271,6 @@ func (pm *ProtocolManager) Start(maxPeers int) {
 	pm.batchEndMsgSub = pm.eventMux.Subscribe(core.BatchPeriodEndEvent{})
 	go pm.batchPeriodEndMsgBroadcastLoop()
 
-	pm.fraudProofReorgMsgSub = pm.eventMux.Subscribe(core.FraudProofReorgEvent{})
-	go pm.fraudProofReorgMsgBroadcastLoop()
-
 	// start sync handlers
 	go pm.syncer()
 	go pm.txsyncLoop()

@@ -159,6 +159,8 @@ type worker struct {
 	chainSideSub    event.Subscription
 	produceBlockCh  chan core.BatchPeriodStartEvent
 	produceBlockSub event.Subscription
+	reorgCh         chan core.NewTxsEvent
+	reorgSub        event.Subscription
 
 	// Channels
 	newWorkCh          chan *newWorkReq
@@ -228,6 +230,7 @@ func newWorker(config *Config, chainConfig *params.ChainConfig, engine consensus
 	worker.txsSub = eth.TxPool().SubscribeNewTxsEvent(worker.txsCh)
 	// channel directly to the miner
 	worker.produceBlockSub = eth.SyncService().SubscribeProduceBlockEvent(worker.produceBlockCh)
+	worker.reorgSub = eth.SyncService().SubscribeNewTxsEvent(worker.reorgCh)
 
 	// Subscribe events for blockchain
 	worker.chainHeadSub = eth.BlockChain().SubscribeChainHeadEvent(worker.chainHeadCh)
@@ -434,6 +437,7 @@ func (w *worker) mainLoop() {
 	defer w.chainHeadSub.Unsubscribe()
 	defer w.chainSideSub.Unsubscribe()
 	defer w.produceBlockSub.Unsubscribe()
+	defer w.reorgSub.Unsubscribe()
 
 	for {
 		select {
@@ -482,6 +486,52 @@ func (w *worker) mainLoop() {
 		// as they come. Wait for the block to be mined before
 		// reading the next tx from the channel when there is
 		// not an error processing the transaction.
+		case ev := <-w.reorgCh:
+			if len(ev.Txs) == 0 {
+				log.Warn("No transaction sent to miner from syncservice")
+				continue
+			}
+			tx := ev.Txs[0]
+			log.Debug("Attempting to commit rollup transaction", "hash", tx.Hash().Hex())
+			// Build the block with the tx and add it to the chain. This will
+			// send the block through the `taskCh` and then through the
+			// `resultCh` which ultimately adds the block to the blockchain
+			// through `bc.WriteBlockWithState`
+			if err := w.commitNewTx(tx); err == nil {
+				// `chainHeadCh` is written to when a new block is added to the
+				// tip of the chain. Reading from the channel will block until
+				// the ethereum block is added to the chain downstream of `commitNewTx`.
+				// This will result in a deadlock if we call `commitNewTx` with
+				// a transaction that cannot be added to the chain, so this
+				// should be updated to a select statement that can also listen
+				// for errors.
+				head := <-w.chainHeadCh
+				txs := head.Block.Transactions()
+				if len(txs) == 0 {
+					log.Warn("No transactions in block")
+					continue
+				}
+				txn := txs[0]
+				height := head.Block.Number().Uint64()
+				log.Debug("Miner got new head", "height", height, "block-hash", head.Block.Hash().Hex(), "tx-hash", txn.Hash().Hex(), "tx-hash", tx.Hash().Hex())
+
+				// Prevent memory leak by cleaning up pending tasks
+				// This is mostly copied from the `newWorkLoop`
+				// `clearPending` function and must be called
+				// periodically to clean up pending tasks. This
+				// function was originally called in `newWorkLoop`
+				// but the BVM implementation no longer uses that code path.
+				w.pendingMu.Lock()
+				for h := range w.pendingTasks {
+					delete(w.pendingTasks, h)
+				}
+				w.pendingMu.Unlock()
+			} else {
+				log.Error("Problem committing transaction", "msg", err)
+				if ev.ErrCh != nil {
+					ev.ErrCh <- err
+				}
+			}
 		case ev := <-w.produceBlockCh:
 			if ev.Msg.ExpireTime < uint64(time.Now().Unix()) {
 				log.Warn("No transaction sent to miner from syncservice")
