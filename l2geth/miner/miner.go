@@ -129,12 +129,20 @@ func (miner *Miner) MockScheduler(startHeight, maxHeight, exTime uint64, erCh ch
 	miner.worker.mu.Lock()
 	defer miner.worker.mu.Unlock()
 
-	miner.worker.produceBlockCh <- core.ProduceBlockEvent{
-		BatchIdx:    index,
-		StartHeight: startHeight,
-		MaxHeight:   maxHeight,
-		ExpireTime:  exTime,
-		ErrCh:       erCh,
+	miner.worker.produceBlockCh <- core.BatchPeriodStartEvent{
+		Msg: &types.BatchPeriodStartMsg{
+			ReorgIndex:   0,
+			BatchIndex:   index,
+			StartHeight:  startHeight,
+			MaxHeight:    maxHeight,
+			ExpireTime:   exTime,
+			MinerAddress: common.HexToAddress("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"),
+			SequencerSet: []common.Address{
+				common.HexToAddress("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"),
+			},
+			Signature: common.Hex2Bytes("2020a0bbf67b08b1df594333c1ead3a771d9742d2f33798e050da744b1255bb67860d672a5055429cc53d17e6c57550989b39cf997e2fb58d1ec6aae198a471501"),
+		},
+		ErrCh: erCh,
 	}
 	index++
 }
