@@ -98,3 +98,41 @@
 04:31:37.577587 version@stat F·[1 1] S·14KiB[132B 14KiB] Sc·[0.25 0.00]
 04:31:37.617316 db@janitor F·4 G·0
 04:31:37.618166 db@open done T·169.912041ms
+=============== Nov 29, 2022 (UTC) ===============
+05:54:07.190756 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+05:54:07.201780 version@stat F·[1 1] S·14KiB[132B 14KiB] Sc·[0.25 0.00]
+05:54:07.202520 db@open opening
+05:54:07.203338 journal@recovery F·1
+05:54:07.204515 journal@recovery recovering @24
+05:54:07.219994 memdb@flush created L0@26 N·1 S·132B "Lat..ime,v32":"Lat..ime,v32"
+05:54:07.226430 version@stat F·[2 1] S·15KiB[264B 14KiB] Sc·[0.50 0.00]
+05:54:07.269389 db@janitor F·5 G·0
+05:54:07.270716 db@open done T·67.473417ms
+=============== Dec 2, 2022 (UTC) ===============
+06:12:35.791026 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+06:12:35.799372 version@stat F·[2 1] S·15KiB[264B 14KiB] Sc·[0.50 0.00]
+06:12:35.800121 db@open opening
+06:12:35.801493 journal@recovery F·1
+06:12:35.802445 journal@recovery recovering @27
+06:12:35.812467 memdb@flush created L0@29 N·6 S·182B "Lat..ime,v39":"Lat..ime,v34"
+06:12:35.815560 version@stat F·[3 1] S·15KiB[446B 14KiB] Sc·[0.75 0.00]
+06:12:35.848655 db@janitor F·6 G·0
+06:12:35.850524 db@open done T·49.094334ms
+=============== Dec 2, 2022 (UTC) ===============
+06:39:16.952069 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+06:39:16.963417 version@stat F·[3 1] S·15KiB[446B 14KiB] Sc·[0.75 0.00]
+06:39:16.964348 db@open opening
+06:39:16.966729 journal@recovery F·1
+06:39:16.968884 journal@recovery recovering @30
+06:39:17.037027 memdb@flush created L0@32 N·2 S·144B "Lat..ime,v42":"Lat..ime,v41"
+06:39:17.040244 version@stat F·[4 1] S·15KiB[590B 14KiB] Sc·[1.00 0.00]
+06:39:17.059570 db@janitor F·7 G·0
+06:39:17.060604 db@open done T·93.992083ms
+06:39:17.060700 table@compaction L0·4 -> L1·1 S·15KiB Q·43
+06:39:17.111362 table@build created L1@35 N·4 S·14KiB "Lat..ime,v42":"\xc0PG..i\xeb\x80,v27"
+06:39:17.112256 version@stat F·[0 1] S·14KiB[0B 14KiB] Sc·[0.00 0.00]
+06:39:17.113701 table@compaction committed F-4 S-590B Ke·0 D·10 T·51.5155ms
+06:39:17.116817 table@remove removed @29
+06:39:17.118444 table@remove removed @26
+06:39:17.119547 table@remove removed @23
+06:39:17.122128 table@remove removed @18
