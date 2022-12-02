@@ -45,4 +45,4 @@ wget --no-check-certificate --no-proxy https://datalayr-testnet.s3.amazonaws.com
 wget --no-check-certificate --no-proxy https://datalayr-testnet.s3.amazonaws.com/g2.point.3000 -O ./data/kzg/g2.point
 
 # Run setup script for geth-node
-cd ../../../datalayr-mantle/ && make setup-geth
+cd ../../../../datalayr-mantle/ && make setup-geth
