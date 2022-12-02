@@ -1,13 +1,4 @@
-{"level":"info","time":"2022-12-02T06:39:17Z","caller":"/app/dl-node/server.go:67","message":"Setting up kzgConfig"}
-{"level":"debug","address":"0xe17bAd29284B9A8E7b49439B3904819814F67944","Operator":"{\"Id\":\"\",\"PubKey\":null,\"PubKeyHash\":\"\",\"FromBlockNumber\":\"\",\"ToBlockNumber\":\"\",\"Socket\":\"\"}","time":"2022-12-02T06:39:18Z","caller":"/app/common/graphView/operator.go:71","message":"Returned no operator"}
-{"level":"error","error":"operator does not exist","time":"2022-12-02T06:39:18Z","caller":"/app/dl-node/dln.go:115","message":"Couldn't find operator"}
-{"level":"info","time":"2022-12-02T06:39:18Z","caller":"/app/dl-node/dln.go:117","message":"Start Self Registration."}
-{"level":"info","loc":"ChainIO.Register","txhash":"0xb9b1272a3dad5cb66e7a1d8d69985551af8bec6ae5e804aa2c821c44cc034e6c","time":"2022-12-02T06:39:19Z","caller":"/app/common/contracts/operators.go:76","message":"Tx complete"}
-{"level":"info","time":"2022-12-02T06:39:20Z","caller":"/app/dl-node/dln.go:123","message":"Self Register Submission success"}
-{"level":"info","time":"2022-12-02T06:39:20Z","caller":"/app/dl-node/server.go:109","message":"Verifier is ready"}
-{"level":"info","port":"32009","address":"[::]:32009","time":"2022-12-02T06:39:20Z","caller":"/app/dl-node/server.go:113","message":"GRPC Listening"}
-{"level":"info","loc":"pollingInitDatStore from msgHash","id":"0xfb0a79fd...","time":"2022-12-02T06:44:34Z","caller":"/app/common/graphView/polling.go:62","message":"Waiter Get Event %v"}
-{"level":"debug","time":"2022-12-02T06:44:34Z","caller":"/app/dl-node/validation.go:80","message":"LOW DEGREE VER%!(EXTRA *bn254.G2Point=E([16830327939625002658700714648517353169959739471519376929320823760593107950073+37560092265579726937204651858044839045567693896227979530483715511025537321*u,2472070803365189980251904697563675030707506264298947696385653289516677447673+2242464445973267880075543616451937623673640867436328602435544854878092839401*u]), int=2936)"}
-{"level":"info","loc":"StoreFrames msgHash","id":"0xfb0a79fd...","time":"2022-12-02T06:44:34Z","caller":"/app/dl-node/server.go:282","message":"Verifying 1 frames take 2.703792ms"}
-{"level":"info","time":"2022-12-02T06:44:34Z","caller":"/app/dl-node/store.go:122","message":"data has length 1009"}
-{"level":"info","loc":"StoreFrames msgHash","id":"0xfb0a79fd...","time":"2022-12-02T06:44:34Z","caller":"/app/dl-node/server.go:301","message":"Return at 74.992541ms."}
+{"level":"info","time":"2022-12-02T06:50:22Z","caller":"/app/dl-node/server.go:67","message":"Setting up kzgConfig"}
+{"level":"info","time":"2022-12-02T06:50:24Z","caller":"/app/dl-node/dln.go:104","message":"Found operator registered"}
+{"level":"info","time":"2022-12-02T06:50:24Z","caller":"/app/dl-node/server.go:109","message":"Verifier is ready"}
+{"level":"info","port":"32009","address":"[::]:32009","time":"2022-12-02T06:50:24Z","caller":"/app/dl-node/server.go:113","message":"GRPC Listening"}

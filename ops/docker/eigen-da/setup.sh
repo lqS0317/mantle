@@ -39,7 +39,8 @@ EXPERIMENT=""
 HOST_IP=0.0.0.0' > ./.env
 
 # Clone g1, g2 points from s3
-cd ../mkdir -p ./data/kzg
+cd ./datalayr
+mkdir -p ./data/kzg
 wget --no-check-certificate --no-proxy https://datalayr-testnet.s3.amazonaws.com/g1.point.3000 -O ./data/kzg/g1.point
 wget --no-check-certificate --no-proxy https://datalayr-testnet.s3.amazonaws.com/g2.point.3000 -O ./data/kzg/g2.point
 
