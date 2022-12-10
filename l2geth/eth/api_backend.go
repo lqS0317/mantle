@@ -120,6 +120,7 @@ func (b *EthAPIBackend) SetHead(number uint64) {
 		return
 	}
 
+	b.eth.syncService.SetLatestIndex(tx.GetMeta().Index)
 	b.eth.syncService.SetLatestL1Timestamp(tx.L1Timestamp())
 	b.eth.syncService.SetLatestL1BlockNumber(blockNumber.Uint64())
 }

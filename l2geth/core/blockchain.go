@@ -308,9 +308,14 @@ func (bc *BlockChain) GetVMConfig() *vm.Config {
 	return &bc.vmConfig
 }
 
-// GetVMConfig returns the block chain VM config.
+// SetSyncServiceHook set syncService Hook
 func (bc *BlockChain) SetSyncServiceHook(hook func(block *types.Block) error) {
 	bc.syncServiceHook = hook
+}
+
+// UpdateBlockHeader
+func (bc *BlockChain) UpdateBlockHeader(block *types.Block) {
+	bc.hc.WriteHeader(block.Header())
 }
 
 // empty returns an indicator whether the blockchain is empty.

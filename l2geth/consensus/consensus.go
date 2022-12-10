@@ -64,6 +64,8 @@ type Engine interface {
 	// via the VerifySeal method.
 	VerifyHeader(chain ChainReader, header *types.Header, seal bool) error
 
+	// GenHeaderSig generate signature
+	GenHeaderSig(header *types.Header) ([]byte, error)
 	// VerifyHeaders is similar to VerifyHeader, but verifies a batch of headers
 	// concurrently. The method returns a quit channel to abort the operations and
 	// a results channel to retrieve the async verifications (the order is that of

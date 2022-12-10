@@ -285,6 +285,9 @@ func (hc *HeaderChain) InsertHeaderChain(chain []*types.Header, writeHeader WhCa
 	// Collect some import statistics to report on
 	stats := struct{ processed, ignored int }{}
 	// All headers passed verification, import them into the database
+	for _, header := range chain {
+		log.Info("InsertHeaderChain", "Number", header.Number, "Hash", header.Hash().String(), "ParentHash", header.ParentHash.String())
+	}
 	for i, header := range chain {
 		// Short circuit insertion if shutting down
 		if hc.procInterrupt() {

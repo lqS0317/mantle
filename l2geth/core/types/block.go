@@ -23,6 +23,7 @@ import (
 	"io"
 	"math/big"
 	"reflect"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -99,7 +100,12 @@ type headerMarshaling struct {
 // Hash returns the block hash of the header, which is simply the keccak256 hash of its
 // RLP encoding.
 func (h *Header) Hash() common.Hash {
-	return rlpHash(h)
+	newHeader := CopyHeader(h)
+	schedulerSigFlag := "scheduler_sig_flag"
+	if strings.HasSuffix(string(newHeader.Extra), schedulerSigFlag) && len(newHeader.Extra) > len(schedulerSigFlag)+65 {
+		newHeader.Extra = newHeader.Extra[:len(newHeader.Extra)-len(schedulerSigFlag)-65]
+	}
+	return rlpHash(newHeader)
 }
 
 var headerSize = common.StorageSize(reflect.TypeOf(Header{}).Size())
@@ -317,6 +323,7 @@ func (b *Block) TxHash() common.Hash      { return b.header.TxHash }
 func (b *Block) ReceiptHash() common.Hash { return b.header.ReceiptHash }
 func (b *Block) UncleHash() common.Hash   { return b.header.UncleHash }
 func (b *Block) Extra() []byte            { return common.CopyBytes(b.header.Extra) }
+func (b *Block) UpdateExtra(data []byte)  { b.header.Extra = data }
 
 func (b *Block) Header() *Header { return CopyHeader(b.header) }
 

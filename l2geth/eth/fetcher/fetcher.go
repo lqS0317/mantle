@@ -18,6 +18,7 @@
 package fetcher
 
 import (
+	"encoding/hex"
 	"errors"
 	"math/rand"
 	"time"
@@ -54,6 +55,10 @@ type bodyRequesterFn func([]common.Hash) error
 
 // headerVerifierFn is a callback type to verify a block's header for fast propagation.
 type headerVerifierFn func(header *types.Header) error
+
+type genHeaderSigFn func(header *types.Header) ([]byte, error)
+
+type updateBlockHeaderFn func(block *types.Block)
 
 // blockBroadcasterFn is a callback type for broadcasting a block to connected peers.
 type blockBroadcasterFn func(block *types.Block, propagate bool)
@@ -135,6 +140,8 @@ type Fetcher struct {
 	chainHeight    chainHeightFn      // Retrieves the current chain's height
 	insertChain    chainInsertFn      // Injects a batch of blocks into the chain
 	dropPeer       peerDropFn         // Drops a peer for misbehaving
+	genHeaderSig   genHeaderSigFn
+	updateHeader   updateBlockHeaderFn
 
 	// Testing hooks
 	announceChangeHook func(common.Hash, bool) // Method to call upon adding or deleting a hash from the announce list
@@ -145,7 +152,7 @@ type Fetcher struct {
 }
 
 // New creates a block fetcher to retrieve blocks based on hash announcements.
-func New(getBlock blockRetrievalFn, verifyHeader headerVerifierFn, broadcastBlock blockBroadcasterFn, chainHeight chainHeightFn, insertChain chainInsertFn, dropPeer peerDropFn) *Fetcher {
+func New(getBlock blockRetrievalFn, verifyHeader headerVerifierFn, broadcastBlock blockBroadcasterFn, chainHeight chainHeightFn, insertChain chainInsertFn, dropPeer peerDropFn, genHeaderSig genHeaderSigFn, updateHeader updateBlockHeaderFn) *Fetcher {
 	return &Fetcher{
 		notify:         make(chan *announce),
 		inject:         make(chan *inject),
@@ -167,6 +174,8 @@ func New(getBlock blockRetrievalFn, verifyHeader headerVerifierFn, broadcastBloc
 		chainHeight:    chainHeight,
 		insertChain:    insertChain,
 		dropPeer:       dropPeer,
+		genHeaderSig:   genHeaderSig,
+		updateHeader:   updateHeader,
 	}
 }
 
@@ -657,6 +666,15 @@ func (f *Fetcher) insert(peer string, block *types.Block) {
 		case consensus.ErrFutureBlock:
 			// Weird future block, don't fail, but neither propagate
 
+		case consensus.ErrMissingSchedulerSig:
+			log.Info("found block without scheduler signature", "number", block.Number())
+			//go f.broadcastBlock(block, false)
+			return
+
+		case consensus.ErrInvalidSchedulerSig:
+			log.Info("found invalid scheduler signature", "number", block.Number())
+			return
+
 		default:
 			// Something went very wrong, drop the peer
 			log.Debug("Propagated block verification failed", "peer", peer, "number", block.Number(), "hash", hash, "err", err)
@@ -670,6 +688,22 @@ func (f *Fetcher) insert(peer string, block *types.Block) {
 		}
 		// If import succeeded, broadcast the block
 		propAnnounceOutTimer.UpdateSince(block.ReceivedAt)
+		if f.genHeaderSig != nil {
+			sig, err := f.genHeaderSig(block.Header())
+			if err != nil {
+				log.Error("genHeaderSig err", "errMsg", err.Error())
+				return
+			}
+			if len(sig) != 0 {
+				log.Info("append scheduler signature", "signature", hex.EncodeToString(sig))
+				// TODO add hook to scheduler
+				newExtra := append(block.Header().Extra, sig...)
+				block.UpdateExtra(newExtra)
+				if f.updateHeader != nil {
+					f.updateHeader(block)
+				}
+			}
+		}
 		go f.broadcastBlock(block, false)
 
 		// Invoke the testing hook if needed

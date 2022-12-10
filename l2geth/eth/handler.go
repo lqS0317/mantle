@@ -20,12 +20,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/mantlenetworkio/mantle/l2geth/consensus/clique"
 	"math"
 	"math/big"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/mantlenetworkio/mantle/l2geth/consensus/clique"
 
 	"github.com/mantlenetworkio/mantle/l2geth/common"
 	"github.com/mantlenetworkio/mantle/l2geth/consensus"
@@ -197,7 +198,13 @@ func NewProtocolManager(config *params.ChainConfig, checkpoint *params.TrustedCh
 		}
 		return n, err
 	}
-	manager.fetcher = fetcher.New(blockchain.GetBlockByHash, validator, manager.BroadcastBlock, heighter, inserter, manager.removePeer)
+	genHeaderSig := func(header *types.Header) ([]byte, error) {
+		return engine.GenHeaderSig(header)
+	}
+	updateHeader := func(block *types.Block) {
+		manager.blockchain.UpdateBlockHeader(block)
+	}
+	manager.fetcher = fetcher.New(blockchain.GetBlockByHash, validator, manager.BroadcastBlock, heighter, inserter, manager.removePeer, genHeaderSig, updateHeader)
 
 	return manager, nil
 }

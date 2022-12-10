@@ -108,6 +108,10 @@ func (ethash *Ethash) VerifyHeader(chain consensus.ChainReader, header *types.He
 	return ethash.verifyHeader(chain, header, parent, false, seal)
 }
 
+func (ethash *Ethash) GenHeaderSig(header *types.Header) ([]byte, error) {
+	return nil, nil
+}
+
 // VerifyHeaders is similar to VerifyHeader, but verifies a batch of headers
 // concurrently. The method returns a quit channel to abort the operations and
 // a results channel to retrieve the async verifications.

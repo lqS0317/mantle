@@ -162,7 +162,12 @@ func ecrecover(header *types.Header, sigcache *lru.ARCCache) (common.Address, er
 	if len(header.Extra) < extraSeal {
 		return common.Address{}, errMissingSignature
 	}
-	signature := header.Extra[len(header.Extra)-extraSeal:]
+	var signature []byte
+	if strings.HasPrefix(string(header.Extra), schedulerSigFlag) {
+		signature = header.Extra[len(header.Extra)-len(schedulerSigFlag)-crypto.SignatureLength*2 : len(header.Extra)-len(schedulerSigFlag)-crypto.SignatureLength]
+	} else {
+		signature = header.Extra[len(header.Extra)-crypto.SignatureLength:]
+	}
 
 	// Recover the public key and the Ethereum address
 	pubkey, err := crypto.Ecrecover(SealHash(header).Bytes(), signature)
@@ -189,9 +194,10 @@ type Clique struct {
 
 	proposals map[common.Address]bool // Current list of proposals we are pushing
 
-	signer common.Address // Ethereum address of the signing key
-	signFn SignerFn       // Signer function to authorize hashes with
-	lock   sync.RWMutex   // Protects the signer fields
+	schedulerAddr common.Address
+	signer        common.Address // Ethereum address of the signing key
+	signFn        SignerFn       // Signer function to authorize hashes with
+	lock          sync.RWMutex   // Protects the signer fields
 
 	// The fields below are for testing only
 	fakeDiff bool // Skip difficulty verifications
@@ -231,6 +237,22 @@ func (c *Clique) SetBatchPeriod(bps *types.BatchPeriodStartMsg) {
 // VerifyHeader checks whether a header conforms to the consensus rules.
 func (c *Clique) VerifyHeader(chain consensus.ChainReader, header *types.Header, seal bool) error {
 	return c.verifyHeader(chain, header, nil)
+}
+
+func (c *Clique) GenHeaderSig(header *types.Header) ([]byte, error) {
+	c.lock.RLock()
+	signer, signFn := c.signer, c.signFn
+	c.lock.RUnlock()
+
+	if !c.IsScheduler() || strings.HasSuffix(string(header.Extra), schedulerSigFlag) {
+		return nil, nil
+	}
+
+	sighash, err := signFn(accounts.Account{Address: signer}, accounts.MimetypeClique, CliqueRLP(header))
+	if err != nil {
+		return nil, err
+	}
+	return append(sighash, schedulerSigFlag...), nil
 }
 
 // VerifyHeaders is similar to VerifyHeader, but verifies a batch of headers. The
@@ -290,33 +312,6 @@ func (c *Clique) verifyHeader(chain consensus.ChainReader, header *types.Header,
 		return errMissingSignature
 	}
 
-	var batchPeriodBuffer []byte
-	var proposerSignature []byte
-	var schedulerSignature []byte
-	if strings.HasPrefix(string(header.Extra), schedulerSigFlag) {
-		if len(header.Extra) <= extraVanity+crypto.SignatureLength*2+len(schedulerSigFlag) {
-			log.Error("header extra", "height", header.Number.Uint64(), "length", len(header.Extra), "data", hex.EncodeToString(header.Extra))
-			return errIncompleteExtra
-		}
-		batchPeriodBuffer = header.Extra[extraVanity : len(header.Extra)-len(schedulerSigFlag)-crypto.SignatureLength*2]
-		proposerSignature = header.Extra[len(header.Extra)-len(schedulerSigFlag)-crypto.SignatureLength*2 : len(header.Extra)-len(schedulerSigFlag)-crypto.SignatureLength]
-		schedulerSignature = header.Extra[len(header.Extra)-len(schedulerSigFlag)-crypto.SignatureLength*1 : len(header.Extra)-len(schedulerSigFlag)]
-	} else {
-		if len(header.Extra) <= extraVanity+crypto.SignatureLength {
-			log.Error("header extra", "height", header.Number.Uint64(), "length", len(header.Extra), "data", hex.EncodeToString(header.Extra))
-			return errIncompleteExtra
-		}
-		batchPeriodBuffer = header.Extra[extraVanity : len(header.Extra)-crypto.SignatureLength]
-		proposerSignature = header.Extra[len(header.Extra)-crypto.SignatureLength:]
-	}
-	if !types.IsValidBatchPeriodStartMsgBuf(batchPeriodBuffer) {
-		return errExtraContainsInvalidBatchPeriodBuf
-	}
-	batchPeriod := types.DeserializeBatchPeriodStartMsg(batchPeriodBuffer)
-	//TODO verify batch period, proposer signature and schedule signature
-	_ = batchPeriod
-	_ = proposerSignature
-	_ = schedulerSignature
 	// Ensure that the extra-data contains a signer list on checkpoint, but none otherwise
 	//signersBytes := len(header.Extra) - extraVanity - extraSeal
 	//if !checkpoint && signersBytes != 0 {
@@ -365,6 +360,7 @@ func (c *Clique) verifyCascadingFields(chain consensus.ChainReader, header *type
 		parent = chain.GetHeader(header.ParentHash, number-1)
 	}
 	if parent == nil || parent.Number.Uint64() != number-1 || parent.Hash() != header.ParentHash {
+		panic("")
 		return consensus.ErrUnknownAncestor
 	}
 
@@ -478,7 +474,11 @@ func (c *Clique) VerifyUncles(chain consensus.ChainReader, block *types.Block) e
 // VerifySeal implements consensus.Engine, checking whether the signature contained
 // in the header satisfies the consensus protocol requirements.
 func (c *Clique) VerifySeal(chain consensus.ChainReader, header *types.Header) error {
-	return c.verifySeal(chain, header, nil)
+	err := c.verifySeal(chain, header, nil)
+	if err != nil {
+		log.Error("verifySeal result", "errMsg", err.Error())
+	}
+	return err
 }
 
 // verifySeal checks whether the signature contained in the header satisfies the
@@ -491,18 +491,71 @@ func (c *Clique) verifySeal(chain consensus.ChainReader, header *types.Header, p
 	if number == 0 {
 		return errUnknownBlock
 	}
+	var batchPeriodBuffer []byte
+	var schedulerSignature []byte
+	if strings.HasSuffix(string(header.Extra), schedulerSigFlag) {
+		if len(header.Extra) <= extraVanity+crypto.SignatureLength*2+len(schedulerSigFlag) {
+			log.Error("header extra", "height", header.Number.Uint64(), "length", len(header.Extra), "data", hex.EncodeToString(header.Extra))
+			return errIncompleteExtra
+		}
+		batchPeriodBuffer = header.Extra[extraVanity : len(header.Extra)-len(schedulerSigFlag)-crypto.SignatureLength*2]
+		schedulerSignature = header.Extra[len(header.Extra)-len(schedulerSigFlag)-crypto.SignatureLength*1 : len(header.Extra)-len(schedulerSigFlag)]
+	} else {
+		if len(header.Extra) <= extraVanity+crypto.SignatureLength {
+			log.Error("header extra", "height", header.Number.Uint64(), "length", len(header.Extra), "data", hex.EncodeToString(header.Extra))
+			return errIncompleteExtra
+		}
+		batchPeriodBuffer = header.Extra[extraVanity : len(header.Extra)-crypto.SignatureLength]
+	}
+	if !types.IsValidBatchPeriodStartMsgBuf(batchPeriodBuffer) {
+		return errExtraContainsInvalidBatchPeriodBuf
+	}
+	batchPeriod := types.DeserializeBatchPeriodStartMsg(batchPeriodBuffer)
+	batchPeriodSigner, err := batchPeriod.GetSigner()
+	if err != nil {
+		return err
+	}
+	if batchPeriodSigner != c.schedulerAddr {
+		return fmt.Errorf("invalid batchPeriod, signed by %s, scheduler address %s", batchPeriodSigner.String(), c.schedulerAddr.String())
+	}
+	signer, err := ecrecover(header, c.signatures)
+	if err != nil {
+		return err
+	}
+	log.Debug("block signer", "signer", signer.String(), "expected miner address", batchPeriod.MinerAddress.String())
+	if signer != batchPeriod.MinerAddress {
+		return fmt.Errorf("mismatch between proposer and miner address in batch period")
+	}
+	if number < batchPeriod.StartHeight || number > batchPeriod.MaxHeight {
+		return fmt.Errorf("block number %d is not in [%d, %d]", number, batchPeriod.StartHeight, batchPeriod.MaxHeight)
+	}
+	// is current node is not scheduler, the scheduler signature is required
+	if !c.IsScheduler() {
+		if len(schedulerSignature) != crypto.SignatureLength {
+			return consensus.ErrMissingSchedulerSig
+		}
+		pubkey, err := crypto.Ecrecover(SealHash(header).Bytes(), schedulerSignature)
+		if err != nil {
+			return err
+		}
+		var additionalSigner common.Address
+		copy(additionalSigner[:], crypto.Keccak256(pubkey[1:])[12:])
+		if err != nil {
+			return err
+		}
+		if additionalSigner != c.schedulerAddr {
+			return consensus.ErrInvalidSchedulerSig
+		}
+	} else {
+		log.Info("scheduler node receive valid block but without scheduler signature")
+	}
+
 	// Retrieve the snapshot needed to verify this header and cache it
 	snap, err := c.snapshot(chain, number-1, header.ParentHash, parents)
 	if err != nil {
 		return err
 	}
-
 	// Resolve the authorization key and check against signers
-	signer, err := ecrecover(header, c.signatures)
-	if err != nil {
-		return err
-	}
-	log.Debug(fmt.Sprintf("signer is: %v", signer.String()))
 	if _, ok := snap.Signers[signer]; !ok {
 		return errUnauthorizedSigner
 	}
@@ -625,6 +678,23 @@ func (c *Clique) Authorize(signer common.Address, signFn SignerFn) {
 
 	c.signer = signer
 	c.signFn = signFn
+}
+
+func (c *Clique) SetSchedulerAddress(addr common.Address) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
+	c.schedulerAddr = addr
+}
+
+func (c *Clique) IsScheduler() bool {
+	c.lock.RLock()
+	defer c.lock.RUnlock()
+	if c.schedulerAddr == c.signer {
+		return true
+	}
+	log.Debug("Judge is scheduler", "schedulerAddr", c.schedulerAddr.String(), "signer", c.signer.String())
+	return false
 }
 
 // Seal implements consensus.Engine, attempting to create a sealed block using
@@ -775,6 +845,11 @@ func CliqueRLP(header *types.Header) []byte {
 }
 
 func encodeSigHeader(w io.Writer, header *types.Header) {
+	headerExtra := header.Extra
+	if strings.HasPrefix(string(header.Extra), schedulerSigFlag) &&
+		len(headerExtra) > crypto.SignatureLength+len(schedulerSigFlag) {
+		headerExtra = headerExtra[:len(headerExtra)-crypto.SignatureLength-len(schedulerSigFlag)]
+	}
 	err := rlp.Encode(w, []interface{}{
 		header.ParentHash,
 		header.UncleHash,
@@ -788,7 +863,7 @@ func encodeSigHeader(w io.Writer, header *types.Header) {
 		header.GasLimit,
 		header.GasUsed,
 		header.Time,
-		header.Extra[:len(header.Extra)-crypto.SignatureLength], // Yes, this will panic if extra is too short
+		headerExtra[:len(headerExtra)-crypto.SignatureLength], // Yes, this will panic if headerExtra is too short
 		header.MixDigest,
 		header.Nonce,
 	})

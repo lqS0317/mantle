@@ -240,7 +240,7 @@ func New(ctx *node.ServiceContext, config *Config) (*Ethereum, error) {
 	eth.APIBackend.rollupGpo = rollupGpo
 	eth.syncService.RollupGpo = rollupGpo
 
-	if _, ok := eth.engine.(*clique.Clique); ok {
+	if cliqueInst, ok := eth.engine.(*clique.Clique); ok {
 		schedulerInst, err := clique.NewScheduler(
 			time.Duration(eth.blockchain.Config().Clique.Epoch),
 			eth.engine.(*clique.Clique),
@@ -251,6 +251,11 @@ func New(ctx *node.ServiceContext, config *Config) (*Ethereum, error) {
 			return nil, fmt.Errorf("create schedulerInst instance err: %v", err)
 		}
 		eth.protocolManager.setSchedulerInst(schedulerInst)
+		schedulerAddr, err := schedulerInst.GetScheduler()
+		if err != nil {
+			return nil, fmt.Errorf("cannot get schedulerAddr: %w", err)
+		}
+		cliqueInst.SetSchedulerAddress(schedulerAddr)
 	}
 	//setEtherBase
 	etherBase, err := eth.Etherbase()
