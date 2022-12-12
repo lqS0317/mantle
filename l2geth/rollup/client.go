@@ -195,6 +195,7 @@ func (c *Client) GetEnqueue(index uint64) (*types.Transaction, error) {
 		return nil, fmt.Errorf("Cannot deserialize enqueue %d", index)
 	}
 	fmt.Println("enqueue.Data.String():=========", enqueue.Data.String())
+
 	tx, err := enqueueToTransaction(enqueue)
 	if err != nil {
 		return nil, err

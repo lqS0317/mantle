@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/mantlenetworkio/mantle/l2geth/common/hexutil"
 	"github.com/mantlenetworkio/mantle/l2geth/contracts/crossDomainMessage"
 	"math/big"
 	"strconv"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -1283,10 +1285,72 @@ func (s *SyncService) syncQueueTransactionRange(start, end uint64) error {
 		if err != nil {
 			return fmt.Errorf("Canot get enqueue transaction; %w", err)
 		}
+
+		//txx := new(types.Transaction)
+		//if err := rlp.DecodeBytes(tx.GetMeta().RawTransaction, &data); err != nil {
+		//	fmt.Println("rlp.DecodeBytes(tx.GetMeta().RawTransaction, txx) error:", err)
+		//}
+		//var data []interface{}
 		var data crossDomainMessage.Data
-		if err := crossDomainMessage.UnPacketData(tx.GetMeta().RawTransaction, &data); err != nil {
+		//fmt.Println("hexutil.Encode(tx.GetMeta().RawTransaction):", hexutil.Encode(tx.GetMeta().RawTransaction))
+		//bdata, err := hex.DecodeString(hexutil.Encode(tx.GetMeta().RawTransaction)[4:])
+		//if err != nil {
+		//	fmt.Println(err)
+		//}
+		if strings.Contains(hexutil.Encode(tx.GetMeta().RawTransaction), "0xDeADdeaDdEaDdeADdEaDDeADDEaddEaDDEad2222") {
+			fmt.Println("==========================")
+			fmt.Println("==========================")
+			fmt.Println("==========================")
+			fmt.Println("hexutil.Encode(tx.GetMeta().RawTransaction):===", hexutil.Encode(tx.GetMeta().RawTransaction))
+			fmt.Println("==========================")
+			fmt.Println("==========================")
+			fmt.Println("==========================")
+		}
+		40 + 34 + 24
+		//"0xcbd4ece9000000000000000000000000
+		//deaddeaddeaddeaddeaddeaddeaddeaddead2222
+		//000000000000000000000000
+		//d9e2f450525079e1e29fb23bc7caca6f61f8fd4a
+		//000000000000000000000000
+		//0000000000000000000000000000000000000080
+		//0000000000000000000000000000000000000000
+		//00000000000000000000000b0000000000000000
+		//0000000000000000000000000000000000000000
+		//00000024f523f40d000000000000000000000000
+		//0000000000000000000000000000000000000064
+		//0000000000000000
+		//0000000000000000000000000000000000000000"
+
+		//0xcbd4ece9000000000000000000000000
+		//deaddeaddeaddeaddeaddeaddeaddeaddead2222
+		//000000000000000000000000
+		//d9e2f450525079e1e29fb23bc7caca6f61f8fd4a
+		//000000000000000000000000
+		//0000000000000000000000000000000000000080
+		//0000000000000000000000000000000000000000
+		//00000000000000000000000a0000000000000000
+		//0000000000000000000000000000000000000000
+		//00000024f523f40d000000000000000000000000
+		//0000000000000000000000000000000000000001
+		//00000000000000000000000000000000000000000000000000000000
+
+		//0xcbd4ece9000000000000000000000000
+		//deaddeaddeaddeaddeaddeaddeaddeaddead2222
+		//000000000000000000000000
+		//d9e2f450525079e1e29fb23bc7caca6f61f8fd4a
+		//000000000000000000000000
+		//0000000000000000000000000000000000000080
+		//0000000000000000000000000000000000000000
+		//00000000000000000000000e0000000000000000
+		//0000000000000000000000000000000000000000
+		//00000024f523f40d000000000000000000000000
+		//00000000000000000000000000000000000003e8
+		//00000000000000000000000000000000000000000000000000000000
+
+		//48 + 34 + 320 = 402
+		if err := crossDomainMessage.UnPacketData(tx.GetMeta().RawTransaction, data); err != nil {
 			fmt.Println("syncQueueTransactionRange args.Unpack error:", err)
-			return nil
+			//return nil
 		} else {
 			fmt.Printf("syncQueueTransactionRange RawTransaction:%+v\n", data)
 		}

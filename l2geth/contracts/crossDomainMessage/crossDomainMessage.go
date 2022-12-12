@@ -28,16 +28,16 @@ func Abi() *abi.ABI {
 }
 
 type Data struct {
-	Target  []byte   `json:"_target"`
-	Sender  []byte   `json:"_sender"`
-	Message []byte   `json:"_message"`
-	Nonce   *big.Int `json:"messageNonce"`
+	Target       []byte   `abi:"_target"`
+	Sender       []byte   `abi:"_sender"`
+	Message      string   `abi:"_message"`
+	MessageNonce *big.Int `abi:"messageNonce"`
 }
 
 //uint256 _blockStartHeight, uint32 _length, uint256 _batchTime, address[] calldata _tssMembers
 
-func UnPacketData(bytesData []byte, data *Data) error {
+func UnPacketData(bytesData []byte, data Data) error {
 	messageABI = Abi()
-	//return messageABI.Methods["claimReward"].Inputs.Unpack(data, bytesData)
-	return messageABI.Unpack(data, "relayMessage", bytesData)
+	return messageABI.Methods["relayMessage"].Inputs.Unpack(data, bytesData)
+	//return messageABI.Unpack(&data, "relayMessage", bytesData)
 }
