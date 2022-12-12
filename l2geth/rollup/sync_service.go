@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/mantlenetworkio/mantle/l2geth/contracts/crossDomainMessage"
 	"math/big"
 	"strconv"
 	"sync"
@@ -248,11 +249,12 @@ func (s *SyncService) Start() error {
 		go s.VerifierLoop()
 	} else {
 		go func() {
-			if err := s.syncTransactionsToTip(); err != nil {
-				log.Crit("Sequencer cannot sync transactions to tip", "err", err)
-			}
+			//if err := s.syncTransactionsToTip(); err != nil {
+			//	log.Crit("Sequencer cannot sync transactions to tip", "err", err)
+			//}
 			if err := s.syncQueueToTip(); err != nil {
-				log.Crit("Sequencer cannot sync queue to tip", "err", err)
+				//log.Crit("Sequencer cannot sync queue to tip", "err", err)
+				fmt.Println("Sequencer cannot sync queue to tip", "err", err)
 			}
 			s.setSyncStatus(false)
 			go s.SequencerLoop()
@@ -761,6 +763,45 @@ func (s *SyncService) SetLatestBatchIndex(index *uint64) {
 
 // applyTransaction is a higher level API for applying a transaction
 func (s *SyncService) applyTransaction(tx *types.Transaction) error {
+	//fmt.Println("block Number:", s.bc.CurrentBlock().Number())
+	//h := s.bc.CurrentHeader()
+	//before := s.bc.CurrentBlock().Number().Uint64()
+	//beforeLatestEnqueueIndex := *s.GetLatestEnqueueIndex()
+	//var min uint64
+	//if h.Number.Uint64() > 16 {
+	//	var txs []types.Transaction
+	//	var blocks []types.Block
+	//	for i := 11; i <= int(h.Number.Uint64()); i++ {
+	//		block := s.bc.GetBlockByNumber(uint64(i))
+	//		txs = append(txs, *block.Transactions()[0])
+	//		blocks = append(blocks, *block)
+	//	}
+	//	if err := s.SetHead(10); err != nil {
+	//		fmt.Println("s.SetHead(10) error====================================:", err)
+	//	}
+	//	min = s.bc.CurrentBlock().Number().Uint64()
+	//	for _, t := range txs {
+	//		if err := s.applyIndexedTransaction(&t); err != nil {
+	//			fmt.Println("s.applyIndexedTransaction(block.Transactions()[0])", err)
+	//		}
+	//	}
+	//	var afterBlocks []types.Block
+	//	for i := 11; i <= int(h.Number.Uint64()); i++ {
+	//		block := s.bc.GetBlockByNumber(uint64(i))
+	//		afterBlocks = append(blocks, *block)
+	//	}
+	//	for i := 0; i <= int(h.Number.Uint64())-11; i++ {
+	//		fmt.Println("block hash", blocks[i].Hash() == afterBlocks[i].Hash())
+	//		fmt.Println("block root hash", blocks[i].Root() == afterBlocks[i].Root())
+	//		fmt.Println("block root hash", blocks[i].ReceiptHash() == afterBlocks[i].ReceiptHash())
+	//	}
+	//
+	//}
+	//fmt.Println("s.bc.CurrentBlock().Number().Uint64() before", before)
+	//fmt.Println("s.bc.CurrentBlock().Number().Uint64() min:", min)
+	//fmt.Println("s.bc.CurrentBlock().Number().Uint64() after", s.bc.CurrentBlock().Number().Uint64())
+	//fmt.Println("s.GetLatestEnqueueIndex() before:", beforeLatestEnqueueIndex)
+	//fmt.Println("s.GetLatestEnqueueIndex():", *s.GetLatestEnqueueIndex())
 	if tx.GetMeta().Index != nil {
 		return s.applyIndexedTransaction(tx)
 	}
@@ -813,6 +854,31 @@ func (s *SyncService) applyHistoricalTransaction(tx *types.Transaction) error {
 	} else {
 		log.Debug("Historical transaction matches", "index", *index, "hash", tx.Hash().Hex())
 	}
+	return nil
+}
+
+func (s *SyncService) SetHead(number uint64) error {
+	if number == 0 {
+		return errors.New("cannot reset to genesis")
+	}
+	if err := s.bc.SetHead(number); err != nil {
+		return err
+	}
+	// Make sure to reset the LatestL1{Timestamp,BlockNumber}
+	block := s.bc.CurrentBlock()
+	txs := block.Transactions()
+	if len(txs) == 0 {
+		log.Error("No transactions found in block", "number", number)
+		return fmt.Errorf("no transactions found in block:%v", number)
+	}
+	tx := txs[0]
+	blockNumber := tx.L1BlockNumber()
+	if blockNumber == nil {
+		return fmt.Errorf("no L1BlockNumber found in transaction,number:%v", number)
+	}
+	s.SetLatestL1Timestamp(tx.L1Timestamp())
+	s.SetLatestL1BlockNumber(blockNumber.Uint64())
+	s.SetLatestIndex(tx.GetMeta().Index)
 	return nil
 }
 
@@ -1217,6 +1283,14 @@ func (s *SyncService) syncQueueTransactionRange(start, end uint64) error {
 		if err != nil {
 			return fmt.Errorf("Canot get enqueue transaction; %w", err)
 		}
+		var data crossDomainMessage.Data
+		if err := crossDomainMessage.UnPacketData(tx.GetMeta().RawTransaction, &data); err != nil {
+			fmt.Println("syncQueueTransactionRange args.Unpack error:", err)
+			return nil
+		} else {
+			fmt.Printf("syncQueueTransactionRange RawTransaction:%+v\n", data)
+		}
+
 		if err := s.applyTransaction(tx); err != nil {
 			return fmt.Errorf("Cannot apply transaction: %w", err)
 		}
