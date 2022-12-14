@@ -765,43 +765,43 @@ func (s *SyncService) SetLatestBatchIndex(index *uint64) {
 
 // applyTransaction is a higher level API for applying a transaction
 func (s *SyncService) applyTransaction(tx *types.Transaction) error {
-	//fmt.Println("block Number:", s.bc.CurrentBlock().Number())
-	//h := s.bc.CurrentHeader()
-	//before := s.bc.CurrentBlock().Number().Uint64()
+	fmt.Println("block Number:", s.bc.CurrentBlock().Number())
+	h := s.bc.CurrentHeader()
+	before := s.bc.CurrentBlock().Number().Uint64()
 	//beforeLatestEnqueueIndex := *s.GetLatestEnqueueIndex()
-	//var min uint64
-	//if h.Number.Uint64() > 16 {
-	//	var txs []types.Transaction
-	//	var blocks []types.Block
-	//	for i := 11; i <= int(h.Number.Uint64()); i++ {
-	//		block := s.bc.GetBlockByNumber(uint64(i))
-	//		txs = append(txs, *block.Transactions()[0])
-	//		blocks = append(blocks, *block)
-	//	}
-	//	if err := s.SetHead(10); err != nil {
-	//		fmt.Println("s.SetHead(10) error====================================:", err)
-	//	}
-	//	min = s.bc.CurrentBlock().Number().Uint64()
-	//	for _, t := range txs {
-	//		if err := s.applyIndexedTransaction(&t); err != nil {
-	//			fmt.Println("s.applyIndexedTransaction(block.Transactions()[0])", err)
-	//		}
-	//	}
-	//	var afterBlocks []types.Block
-	//	for i := 11; i <= int(h.Number.Uint64()); i++ {
-	//		block := s.bc.GetBlockByNumber(uint64(i))
-	//		afterBlocks = append(blocks, *block)
-	//	}
-	//	for i := 0; i <= int(h.Number.Uint64())-11; i++ {
-	//		fmt.Println("block hash", blocks[i].Hash() == afterBlocks[i].Hash())
-	//		fmt.Println("block root hash", blocks[i].Root() == afterBlocks[i].Root())
-	//		fmt.Println("block root hash", blocks[i].ReceiptHash() == afterBlocks[i].ReceiptHash())
-	//	}
-	//
-	//}
-	//fmt.Println("s.bc.CurrentBlock().Number().Uint64() before", before)
-	//fmt.Println("s.bc.CurrentBlock().Number().Uint64() min:", min)
-	//fmt.Println("s.bc.CurrentBlock().Number().Uint64() after", s.bc.CurrentBlock().Number().Uint64())
+	var min uint64
+	if h.Number.Uint64() > 16 {
+		var txs []types.Transaction
+		var blocks []types.Block
+		for i := 11; i <= int(h.Number.Uint64()); i++ {
+			block := s.bc.GetBlockByNumber(uint64(i))
+			txs = append(txs, *block.Transactions()[0])
+			blocks = append(blocks, *block)
+		}
+		if err := s.SetHead(10); err != nil {
+			fmt.Println("s.SetHead(10) error====================================:", err)
+		}
+		min = s.bc.CurrentBlock().Number().Uint64()
+		for _, t := range txs {
+			if err := s.applyIndexedTransaction(&t); err != nil {
+				fmt.Println("s.applyIndexedTransaction(block.Transactions()[0])", err)
+			}
+		}
+		var afterBlocks []types.Block
+		for i := 11; i <= int(h.Number.Uint64()); i++ {
+			block := s.bc.GetBlockByNumber(uint64(i))
+			afterBlocks = append(afterBlocks, *block)
+		}
+		for i := 0; i <= int(h.Number.Uint64())-11; i++ {
+			fmt.Println("block hash", blocks[i].Hash() == afterBlocks[i].Hash())
+			fmt.Println("block root hash", blocks[i].Root() == afterBlocks[i].Root())
+			fmt.Println("block root hash", blocks[i].ReceiptHash() == afterBlocks[i].ReceiptHash())
+		}
+
+	}
+	fmt.Println("s.bc.CurrentBlock().Number().Uint64() before", before)
+	fmt.Println("s.bc.CurrentBlock().Number().Uint64() min:", min)
+	fmt.Println("s.bc.CurrentBlock().Number().Uint64() after", s.bc.CurrentBlock().Number().Uint64())
 	//fmt.Println("s.GetLatestEnqueueIndex() before:", beforeLatestEnqueueIndex)
 	//fmt.Println("s.GetLatestEnqueueIndex():", *s.GetLatestEnqueueIndex())
 	if tx.GetMeta().Index != nil {
