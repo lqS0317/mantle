@@ -1,7 +1,10 @@
 DOCKER_COMPOSE_CMD := docker-compose \
 	-f docker-compose.yml \
 	-f docker-compose.local.yml
+DOCKER_COMPOSE_L1CMD := docker-compose \
+	-f docker-compose-l1.yml
 COPY_ENV := cp -r envs/deployer.env ./.env
+COPY_CHAIN := cp -r chaintestdata ./chaindata
 
 build:
 	DOCKER_BUILDKIT=1 \
@@ -9,8 +12,15 @@ build:
 		build $(service)
 .PHONY: build
 
+l1up:
+	$(COPY_ENV)
+	DOCKER_BUILDKIT=1 \
+	$(DOCKER_COMPOSE_L1CMD) \
+		up --build --detach $(service)
+
 up:
 	$(COPY_ENV)
+	$(COPY_CHAIN)
 	DOCKER_BUILDKIT=1 \
 	$(DOCKER_COMPOSE_CMD) \
 		up --build --detach $(service)
@@ -42,6 +52,7 @@ restart:
 .PHONY: restart
 
 clean: stop
+	sudo rm -rf chaindata
 	find data -mindepth 1 -maxdepth 1 -type d | xargs rm -rf
 .PHONY: clean
 

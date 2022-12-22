@@ -41,6 +41,35 @@ geth account import --password ./password ./key.prv
 echo "Initializing Geth node"
 geth --verbosity="$VERBOSITY" "$@" init genesis.json
 
+
+echo "Starting Geth node"
+if [ $IS_SEQUENCER == "true" ] ;then
+  echo "we are sequencer node!!"
+  exec geth \
+    --verbosity="$VERBOSITY" \
+    --password ./password \
+    --allow-insecure-unlock \
+    --unlock $BLOCK_SIGNER_ADDRESS \
+    --bootnodes $SCHEDULER_P2P_ENODE \
+    --nat $NAT \
+    --config /root/.ethereum/geth/config.toml \
+    --mine \
+    --scheduler.address $BLOCK_SCHEDULER_ADDRESS \
+    --sequencer.mode="true" \
+    "$@"
+elif [ $IS_SCHEDULER == "true" ];then
+  echo "we are scheduler node"
+  exec geth \
+    --verbosity="$VERBOSITY" \
+    --password ./password \
+    --allow-insecure-unlock \
+    --unlock $BLOCK_SIGNER_ADDRESS \
+    --nat $NAT \
+    --mine \
+#    --scheduler.address $BLOCK_SCHEDULER_ADDRESS \
+    "$@"
+fi
+
 # start the geth node
 echo "Starting Geth node"
 exec geth \
@@ -51,3 +80,4 @@ exec geth \
   --mine \
   --miner.etherbase $BLOCK_SIGNER_ADDRESS \
   "$@"
+

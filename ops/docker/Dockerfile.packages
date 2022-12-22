@@ -5,6 +5,8 @@
 FROM mantlenetworkio/foundry:latest as foundry
 FROM node:16-alpine3.14 as base
 
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk --no-cache add curl \
     jq \
     python3 \
