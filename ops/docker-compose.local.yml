@@ -20,26 +20,26 @@ x-base-env: &base-env
   TSS_NODE_L2_ETH_RPC: http://l2geth:8545
 
 services:
-  l1_chain:
-    <<: *base
-    container_name: bitl1chain
-    deploy: # run switch
-      replicas: 1
-
-  deployer:
-    <<: *base
-    container_name: bitdeployer
-    environment:
-      CONTRACTS_RPC_URL: ${CONTRACTS_RPC_URL:-http://l1_chain:8545}
-      CONTRACTS_DEPLOYER_KEY: ${CONTRACTS_DEPLOYER_KEY:-0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97}
-      CONTRACTS_TARGET_NETWORK: ${CONTRACTS_TARGET_NETWORK:-local}
-      BVM_SEQUENCER_ADDRESS: ${BVM_SEQUENCER_ADDRESS:-}
-      BVM_PROPOSER_ADDRESS: ${BVM_PROPOSER_ADDRESS:-}
-      BVM_BLOCK_SIGNER_ADDRESS: ${BVM_BLOCK_SIGNER_ADDRESS:-}
-      BVM_FEE_WALLET_ADDRESS: ${BVM_FEE_WALLET_ADDRESS:-}
-      BVM_ADDRESS_MANAGER_OWNER: ${BVM_ADDRESS_MANAGER_OWNER:-}
-      BVM_GAS_PRICE_ORACLE_OWNER: ${BVM_GAS_PRICE_ORACLE_OWNER:-}
-      L1_BIT_ADDRESS: ${L1_BIT_ADDRESS:-0x1A4b46696b2bB4794Eb3D4c26f1c55F9170fa4C5}
+#  l1_chain:
+#    <<: *base
+#    container_name: bitl1chain
+#    deploy: # run switch
+#      replicas: 1
+#
+#  deployer:
+#    <<: *base
+#    container_name: bitdeployer
+#    environment:
+#      CONTRACTS_RPC_URL: ${CONTRACTS_RPC_URL:-http://l1_chain:8545}
+#      CONTRACTS_DEPLOYER_KEY: ${CONTRACTS_DEPLOYER_KEY:-0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97}
+#      CONTRACTS_TARGET_NETWORK: ${CONTRACTS_TARGET_NETWORK:-local}
+#      BVM_SEQUENCER_ADDRESS: ${BVM_SEQUENCER_ADDRESS:-}
+#      BVM_PROPOSER_ADDRESS: ${BVM_PROPOSER_ADDRESS:-}
+#      BVM_BLOCK_SIGNER_ADDRESS: ${BVM_BLOCK_SIGNER_ADDRESS:-}
+#      BVM_FEE_WALLET_ADDRESS: ${BVM_FEE_WALLET_ADDRESS:-}
+#      BVM_ADDRESS_MANAGER_OWNER: ${BVM_ADDRESS_MANAGER_OWNER:-}
+#      BVM_GAS_PRICE_ORACLE_OWNER: ${BVM_GAS_PRICE_ORACLE_OWNER:-}
+#      L1_BIT_ADDRESS: ${L1_BIT_ADDRESS:-0x1A4b46696b2bB4794Eb3D4c26f1c55F9170fa4C5}
 
   dtl:
     <<: *base

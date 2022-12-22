@@ -1,8 +1,8 @@
 DOCKER_COMPOSE_CMD := docker-compose \
 	-f docker-compose.yml \
 	-f docker-compose.local.yml
-COPY_ENV := cp -r envs/deployer.env ./.env
-COPY_CHAIN := cp -r chaintestdata ./chaindata
+COPY_ENV := sudo cp -r envs/deployer.env ./.env
+COPY_CHAIN := sudo cp -r chaintestdata ./chaindata
 
 build:
 	DOCKER_BUILDKIT=1 \
