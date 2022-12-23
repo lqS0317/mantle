@@ -19,6 +19,8 @@ jobs:
         uses: actions/checkout@master
         with:
           ref: main
+          submodules: recursive
+          token: ${{ secrets.TEST }}
 
       - name: Setup node env
         uses: actions/setup-node@v2.1.2
@@ -34,6 +36,6 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.TEST }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./packages/sdk/docs
           cname: sdk.mantle.xyz
