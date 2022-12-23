@@ -26,10 +26,10 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install dependencies
-        run: npm install
+        run: cd packages/sdk/ && npm install
 
       - name: Build
-        run:  yarn autogen:docs
+        run:  cd packages/sdk/ && yarn autogen:docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
