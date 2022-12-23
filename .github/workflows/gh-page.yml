@@ -12,15 +12,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [16]
+        node: [18]
 
     steps:
       - name: Checkout
         uses: actions/checkout@master
         with:
           ref: main
-          submodules: recursive
-          token: ${{ secrets.TESTMA }}
 
       - name: Setup node env
         uses: actions/setup-node@v2.1.2
@@ -28,10 +26,10 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install dependencies
-        run: git submodule init && git submodule update && yarn install && yarn build && cd packages/sdk/ && npm install
+        run: yarn install && yarn build 
 
       - name: Build
-        run:  yarn autogen:docs
+        run:  cd packages/sdk/ && yarn autogen:docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
