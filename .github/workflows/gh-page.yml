@@ -26,14 +26,14 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install dependencies
-        run: cd packages/sdk/ && npm install @mantleio/sdk
+        run: make && cd packages/sdk/ && npm install
 
       - name: Build
-        run:  cd packages/sdk/ && yarn autogen:docs
+        run:  yarn autogen:docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.TEST }}
           publish_dir: ./packages/sdk/docs
           cname: sdk.mantle.xyz
