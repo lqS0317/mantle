@@ -20,7 +20,7 @@ jobs:
         with:
           ref: main
           submodules: recursive
-          token: ${{ secrets.TEST }}
+          token: ${{ secrets.TESTMA }}
 
       - name: Setup node env
         uses: actions/setup-node@v2.1.2
